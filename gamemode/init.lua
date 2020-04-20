@@ -1,6 +1,7 @@
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("teamsetup.lua")
+AddCSLuaFile("vgui/menu_main.lua")
 
 include ("shared.lua")
 include ("teamsetup.lua")
@@ -65,33 +66,11 @@ function GM:PlayerShouldTakeDamage(ply, attacker)
 end
 
 -- input
-function GM:ShowHelp(ply)
-	ply:SetHealth(math.Clamp(ply:Health() + 25, 0, ply:GetMaxHealth()))
-end
+util.AddNetworkString( "f4menu" )
 
-function GM:ShowTeam(ply)
-	ply:SetHealth(ply:Health() - 50)
-	if (ply:Health() <= 0) then
-		ply:Kill()
-	end
-end
-
-function GM:ShowSpare1(ply)
-	print("Ouch! Stop pressing me, " .. ply:Nick() .. "!")
-end
-
-function GM:ShowSpare2(ply)
-	ply:Say("I'M COOL!", false)
-end
-
-function GM:KeyPress(ply, key)
-
-	if (key == IN_JUMP) then
-			ply:SetVelocity(ply:GetVelocity() + Vector(0,0,1000))
-	elseif (key == IN_DUCK) then
-			ply:EmitSound("vo/Citadel/br_laugh01.wav")
-	end
-
+function GM:ShowSpare2( ply )
+	net.Start( "f4menu" )
+	net.Send( ply )
 end
 
 function GM:PlayerDisconnected( ply )

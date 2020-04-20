@@ -1,4 +1,5 @@
 include("shared.lua")
+include("vgui/menu_main.lua")
 
 surface.CreateFont( "MyFont", {
 	font = "Arial",
@@ -89,6 +90,21 @@ function GM:Think()
 	end
 
 end
+
+net.Receive( "f4menu", function() 
+	if( !MainMenu ) then
+		MainMenu = vgui.Create( "menu_main" )
+		MainMenu:SetVisible( false )
+	end
+
+	if ( MainMenu:IsVisible() ) then
+		MainMenu:SetVisible( false )
+		gui.EnableScreenClicker( false )
+	else
+		MainMenu:SetVisible( true )
+		gui.EnableScreenClicker( true )
+	end
+end)
 
 function GM:HUDShouldDraw( name )
 	local hud = {"CHudHealth", "CHudBattery", "CHudAmmo"}
