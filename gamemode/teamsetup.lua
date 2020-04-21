@@ -1,4 +1,4 @@
-local ply = FindMetaTable("Player")
+local ply = FindMetaTable( "Player" )
 
 local teams = {}
 
@@ -10,8 +10,10 @@ teams[0] = {
 teams[1] = {
     name = "Blue",
     color = Vector( 0.0, 0.0, 1.0 ),
-    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"}
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
 }
+
+player_manager.AddValidModel( "Parrotv3", "models/player/rebs/parrotv3_pm/parrotv3.mdl" );
 
 function ply:SetupTeam( n )
     if ( not teams[n] ) then return end
@@ -22,8 +24,12 @@ function ply:SetupTeam( n )
     self:SetMaxHealth( 200 )
     self:SetWalkSpeed( 100 )
     self:SetRunSpeed( 1000 )
-    self:SetModel( "models/player/Group03m/Male_0" .. math.random(1,9) .. ".mdl")
-
+    if( n == 1 ) then
+        self:SetModel( "models/player/Group03m/Male_0" .. math.random(1,9) .. ".mdl" )
+    else
+        local models = player_manager.AllValidModels()
+        self:SetModel( models["Parrotv3"] )
+    end
     self:GiveWeapons( n )
     
 end

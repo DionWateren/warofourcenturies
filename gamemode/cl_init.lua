@@ -18,7 +18,6 @@ surface.CreateFont( "MyFont", {
 	outline = false
 })
 
-
 hook.Add("HUDPaint", "HUDIdent", function()
 
 	local ply = LocalPlayer()
@@ -32,6 +31,9 @@ hook.Add("HUDPaint", "HUDIdent", function()
 
 	draw.SimpleText( ply:Health(), "MyFont", 30 + 150, ScrH() - 70 + 15, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
+	surface.SetDrawColor( 255, 0, 0, 255 )
+	surface.DrawCircle( 50, 50, 25, 255, 0, 0 )
+	
 	if ( !IsValid( ply ) ) then return -1 end
 
 	local wep = ply:GetActiveWeapon()
@@ -60,6 +62,8 @@ hook.Add("HUDPaint", "HUDIdent", function()
 end)
 
 function GM:Initialize()
+	surface.PlaySound( "temp_song0.mp3" )
+
 	print("Starting motionsensor" )
 
 	if ( !motionsensor.IsAvailable() ) then 
