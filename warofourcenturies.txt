@@ -2,7 +2,7 @@
 {
 	"base"		"base"
 	"title"		"War of our Centuries"
-	"maps"		"^wouc_"
+	"maps"		"^wooc_"
 	"menusystem"	"1"
 
 	"settings"
