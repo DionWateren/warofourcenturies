@@ -10,6 +10,59 @@ surface.CreateFont( "ScoreboardTitle", {
     weight = 800
 })
 
+local PLAYER_LINE_TITLE = {
+    Init = function( self )
+
+        self.Players = self:Add( "DLabel" )
+        self.Players:Dock( FILL )
+        self.Players:SetFont( "ScoreboardPlayer" )
+        self.Players:SetTextColor( Color( 255, 255, 255 ) )
+        self.Players:DockMargin( 0, 0, 0, 0 )
+
+        self.Ping = self:Add( "DLabel" )
+        self.Ping:Dock( RIGHT )
+        self.Ping:SetFont( "ScoreboardPlayer" )
+        self.Ping:SetTextColor( Color( 255, 255, 255 ) )
+        self.Ping:DockMargin( 0, 0, 20, 0 )
+
+        self.Score = self:Add( "DLabel" )
+        self.Score:Dock( RIGHT )
+        self.Score:SetFont( "ScoreboardPlayer" )
+        self.Score:SetTextColor( Color( 255, 255, 255 ) )
+        self.Score:DockMargin( 0, 0, 0, 0 )
+
+        self:Dock( TOP )
+        self:DockPadding( 3, 3, 3, 3 )
+        self:SetHeight( 38 )
+        self:DockMargin( 10, 0, 10, 2 )
+        
+        self:SetZPos( -8000 )
+
+    end,
+
+    Think = function( self )
+
+        playerCount = 0
+
+        for k, v in pairs( player.GetAll() ) do
+            playerCount = playerCount + 1
+        end
+
+        self.Players:SetText( "Players (" .. playerCount .. ")" )
+        self.Score:SetText( "Score" )
+        self.Ping:SetText( "Ping" )
+
+    end,
+
+    Paint = function( self, w, h )
+
+        draw.RoundedBox( 4, 0, 0, w, h, Color( 50, 50, 50, 175 ) )
+
+    end
+}
+
+PLAYER_LINE_TITLE = vgui.RegisterTable( PLAYER_LINE_TITLE, "DPanel" )
+
 local PLAYER_LINE = {
     Init = function( self )
         
@@ -187,6 +240,7 @@ local SCORE_BOARD = {
             draw.RoundedBox( 0, 0, 0, w, h, Color( 150, 200, 150, 150 ) )
         end
 
+        self.Title = self.Scores:Add( PLAYER_LINE_TITLE )
     end,
 
     PerformLayout = function( self )

@@ -16,19 +16,47 @@ include ( "concommands.lua" )
 
 util.AddNetworkString( "f4menu" )
 
+hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam ) 
+
+	text = string.lower( text )
+
+	if( text == "!buddy" ) then
+
+		local spawns = ents.FindByClass( "info_player_start" )
+		local random_entry = math.random( #spawns )
+		local Ent = ents.Create( "npc_zombie" )
+
+		if( !IsValid( Ent ) ) then return end
+
+		local tr = ply:GetEyeTrace()
+
+		--Ent:SetPos( spawns[random_entry]:GetPos() + Vector(0, 0, 5) )
+		Ent:SetPos( tr.HitPos + Vector(0, 0, 5) )
+		Ent:Spawn()
+
+	end
+
+end)
+
 function GM:PlayerSpawn( ply )
 	ply:ChatPrint("You have spawned!")
 
 	ply:SetupHands()
 	ply:SetupTeam( math.random( 0, 1 ) )
 
-	timer.Create("HPregen" .. ply:UserID(), 1, 0, function()
+	timer.Create( "HPregen" .. ply:UserID(), 1, 0, function()
 		ply:SetHealth( math.Clamp( ply:Health() + 1, 0, ply:GetMaxHealth() ) )
 
 		--PrintMessage( HUD_PRINTTALK, "Reps Left: " .. timer.RepsLeft( "HPregen" .. ply:UserID() ) )
 		--PrintMessage( HUD_PRINTTALK, "Time Left Next Rep: " .. timer.TimeLeft( "HPregen" .. ply:UserID() ) )
 
 	end)
+
+	test_trail = util.SpriteTrail( ply, 0, Color(math.Rand(0, 255), math.Rand(0, 255), math.Rand(0, 255)), false, 100, 0, 3, 1/(100) * 0.5, "trails/plasma.vmt")
+end
+
+function GM:PlayerDeath( ply )
+	SafeRemoveEntity( test_trail )
 end
 
 function GM:PlayerDisconnected( ply )
@@ -57,7 +85,7 @@ function GM:PlayerShouldTakeDamage(ply, attacker)
 	if( attacker:IsPlayer() ) then
 		att = attacker
 	elseif( attacker:IsNPC() ) then
-		return false
+		return true
 	elseif( attacker:IsWorld() ) then
 		return true
 	elseif( false ) then -- check if physics prop!!!!!
