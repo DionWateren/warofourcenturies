@@ -1,5 +1,6 @@
-include("shared.lua")
-include("vgui/menu_main.lua")
+include( "shared.lua" )
+include( "cl_scoreboard.lua" )
+include( "vgui/menu_main.lua" )
 
 surface.CreateFont( "MyFont", {
 	font = "Arial",

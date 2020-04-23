@@ -1,6 +1,7 @@
 AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "teamsetup.lua" )
+AddCSLuaFile( "cl_scoreboard.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 
 -- sounds
