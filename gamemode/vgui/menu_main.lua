@@ -80,8 +80,32 @@ local PANEL = {
         sheet2.Paint = function( self, w, h )
             draw.RoundedBox( 0, 0, 0, w, h, Color( 10, 10, 10, 100 ) )
         end
-        colsheet:AddSheet( "????", sheet2, "icon16/anchor.png" )
+        colsheet:AddSheet( "HTML", sheet2, "icon16/anchor.png" )
 
+        local htmlbutton = vgui.Create( "DButton", sheet2 )
+        htmlbutton:Dock( TOP )
+        htmlbutton:DockMargin( 385, 10, 385, 10 )
+        htmlbutton:SetText( "Website" )
+        htmlbutton.DoClick = function()
+
+            local htmlframe = vgui.Create( "DFrame" )
+            htmlframe:Center()
+            htmlframe:SetSize( 800, 600 )
+            htmlframe:ShowCloseButton( true )
+            htmlframe:MakePopup()
+
+            local html = vgui.Create( "HTML", htmlframe )
+            html:Dock( FILL )
+            html:OpenURL( "https://www.youtube.com/watch?v=7E1ZhuFNbUY&list=PLLAN7OC4G99Sx65F38iYoqv2J1OoaiJse&index=25" )
+    
+            local htmlcontrols = vgui.Create( "DHTMLControls", htmlframe )
+            htmlcontrols:Dock( TOP )
+            htmlcontrols:SetHTML( html )
+            htmlcontrols.AddressBar:SetText( "https://www.youtube.com/watch?v=7E1ZhuFNbUY&list=PLLAN7OC4G99Sx65F38iYoqv2J1OoaiJse&index=25" )
+            
+        end
+
+       
     end,
 
     Paint = function( self, w, h )
