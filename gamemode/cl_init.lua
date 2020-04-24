@@ -63,9 +63,10 @@ hook.Add("HUDPaint", "HUDIdent", function()
 end)
 
 function GM:Initialize()
+	
 	-- surface.PlaySound( "temp_song0.mp3" )
 
-	print("Starting motionsensor" )
+	print("Trying to start motionsensor" )
 
 	if ( !motionsensor.IsAvailable() ) then 
 		print("Motionsensor not available!" )

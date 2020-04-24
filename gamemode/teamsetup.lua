@@ -12,6 +12,11 @@ teams[1] = {
     color = Vector( 0.0, 0.0, 1.0 ),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
 }
+teams[2] = {
+    name = "Yellow",
+    color = Vector( 1.0, 1.0, 0.0 ),
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+}
 
 player_manager.AddValidModel( "Parrotv3", "models/player/rebs/parrotv3_pm/parrotv3.mdl" );
 
@@ -24,12 +29,21 @@ function ply:SetupTeam( n )
     self:SetMaxHealth( 200 )
     self:SetWalkSpeed( 100 )
     self:SetRunSpeed( 1000 )
-    if( n == 1 ) then
-        self:SetModel( "models/player/Group03m/Male_0" .. math.random(1,9) .. ".mdl" )
-    else
+    if( n == 0 ) then
+
         local models = player_manager.AllValidModels()
         self:SetModel( models["Parrotv3"] )
+
+    elseif( n == 1 ) then
+
+        self:SetModel( "models/player/skeleton.mdl" )
+
+    else
+
+        self:SetModel( "models/player/Group03m/Male_0" .. math.random(1,9) .. ".mdl" )
+        
     end
+
     self:GiveWeapons( n )
     
 end

@@ -42,7 +42,7 @@ function GM:PlayerSpawn( ply )
 	ply:ChatPrint("You have spawned!")
 
 	ply:SetupHands()
-	ply:SetupTeam( math.random( 0, 1 ) )
+	ply:SetupTeam( math.random( 0, 2 ) )
 
 	timer.Create( "HPregen" .. ply:UserID(), 1, 0, function()
 		ply:SetHealth( math.Clamp( ply:Health() + 1, 0, ply:GetMaxHealth() ) )

@@ -173,12 +173,12 @@ local PLAYER_LINE = {
 
         end
 
-        if( self.Player:Team() == 0 ) then
-            self:SetZPos( 2000 + self.Player:EntIndex() + ( self.NumKills*-50 ) )
-            return
-        end
+        -- if( self.Player:Team() == 0 ) then
+        --     self:SetZPos( 2000 + self.Player:EntIndex() + ( self.NumKills*-50 ) )
+        --     return
+        -- end
 
-        self:SetZPos( ( self.NumKills*-50 ) + self.Player:EntIndex() )
+        self:SetZPos( self.Player:EntIndex() + ( self.NumKills*-50 ) )
 
     end,
 
@@ -200,6 +200,11 @@ local PLAYER_LINE = {
 
         if( self.Player:Team() == 1 ) then
             draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 100, 255, 175) )
+            return
+        end
+
+        if( self.Player:Team() == 2 ) then
+            draw.RoundedBox( 4, 0, 0, w, h, Color( 255, 255, 100, 175) )
             return
         end
 
@@ -244,17 +249,29 @@ local SCORE_BOARD = {
             draw.RoundedBox( 0, 0, 0, w, h, Color( 150, 200, 150, 150 ) )
         end
 
-        self.TeamList0 = self.Teams:Add( "DPanel" )
+        local TeamsWidth = 1200 / 3
+
+        self.TeamList0 = self.Teams:Add( "DListLayout" )
         self.TeamList0:Dock( LEFT )
         --self.TeamList0:SetContentAlignment( 4 )
-        self.TeamList0:SetHeight( 600 )
+        self.TeamList0:SetWidth( TeamsWidth )
 
-        self.TeamList1 = self.Teams:Add( "DPanel" )
-        self.TeamList1:Dock( FILL )
+        self.TeamList1 = self.Teams:Add( "DListLayout" )
+        self.TeamList1:Dock( LEFT )
+        self.TeamList1:SetPaintBackground( true )
+        self.TeamList1:SetSize( 100, 400 )
+        --for i=1, 50 do
+        --    self.TeamList1:Add( Label( "Test " .. i ) )
+        --end
+        --self.TeamList1:SizeToContents()
+        --self.TeamList1:SizeToChildren( true )
+        self.TeamList1:SetWidth( TeamsWidth )
+        
         --self.TeamList1:SetContentAlignment( 5 )
 
-        self.TeamList2 = self.Teams:Add( "DPanel" )
-        self.TeamList2:Dock( RIGHT )
+        self.TeamList2 = self.Teams:Add( "DListLayout" )
+        self.TeamList2:Dock( LEFT )
+        self.TeamList2:SetWidth( TeamsWidth )
         --self.TeamList2:SetContentAlignment( 6 )
 
         self.Title0 = self.TeamList0:Add( PLAYER_LINE_TITLE )
@@ -284,34 +301,40 @@ local SCORE_BOARD = {
     Think = function( self, w, h )
 
         self.Name:SetText( GetHostName() )
+            
+        print( #self.TeamList0:GetChildren() )
+        print( #self.TeamList1:GetChildren() )
+        print( #self.TeamList2:GetChildren() )
 
         for id, pl in pairs( player.GetAll() ) do
 
-            if( IsValid( pl.ScoreEntry ) ) then continue end
+            if( IsValid( pl.ScoreEntry ) ) then 
+
+                if( pl:Team() == 0 ) then
+
+                    self.TeamList0:Add( pl.ScoreEntry )
+                    self.TeamList0:SetHeight( table.Count( self.TeamList0:GetChildren() ) * 38 )
+
+                elseif( pl:Team() == 1 ) then
+
+                    self.TeamList1:Add( pl.ScoreEntry )
+                    self.TeamList1:SetHeight( table.Count( self.TeamList1:GetChildren() ) * 38 )
+
+                elseif( pl:Team() == 2 ) then
+
+                    self.TeamList2:Add( pl.ScoreEntry )
+                    self.TeamList2:SetHeight( table.Count( self.TeamList2:GetChildren() ) * 38 )
+
+                end
+
+                continue 
+            
+            end -- && pl.ScoreEntry.Player:Team() ==
 
             pl.ScoreEntry = vgui.CreateFromTable( PLAYER_LINE, pl.ScoreEntry )
             pl.ScoreEntry:Setup( pl )
             
-            if( pl:Team() == 0 ) then
-
-                self.TeamList0:Add( pl.ScoreEntry )
-
-            elseif( pl:Team() == 1 ) then
-
-                self.TeamList1:Add( pl.ScoreEntry )
-
-            elseif( pl:Team() == 2 ) then
-
-                self.TeamList2:Add( pl.ScoreEntry )
-
-            -- else
-
-            end
-
-            -- self.Scores:AddItem( pl.ScoreEntry )
-
         end
-
     end
 }
 
