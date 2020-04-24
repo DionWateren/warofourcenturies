@@ -5,7 +5,7 @@ AddCSLuaFile( "cl_scoreboard.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 
 -- sounds
-resource.AddFile( "sound/temp_song0.mp3" )
+--resource.AddFile( "sound/temp_song0.mp3" )
 -- models
 resource.AddFile( "models/player/rebs/parrotv3_pm/parrotv3.mdl" )
 resource.AddFile( "materials/models/parrot_rc/parrot/parrot_texture.vmt" )

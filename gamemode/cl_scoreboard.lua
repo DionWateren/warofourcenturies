@@ -45,7 +45,11 @@ local PLAYER_LINE_TITLE = {
         playerCount = 0
 
         for k, v in pairs( player.GetAll() ) do
-            playerCount = playerCount + 1
+
+            if( v:Team() == self.TeamNum ) then
+                playerCount = playerCount + 1
+            end
+
         end
 
         self.Players:SetText( "Players (" .. playerCount .. ")" )
@@ -227,10 +231,10 @@ local SCORE_BOARD = {
         self.Name:SetExpensiveShadow( 3, Color( 0 ,0 , 0, 200 ) )
         self.Name:DockMargin( 0, 0, 0, 0 )
 
-        self.Scores = self:Add( "DScrollPanel" )
-        self.Scores:Dock( FILL )
-        self.Scores:DockMargin( 0, 0, 0, 10 )
-        local scrollBar = self.Scores:GetVBar()
+        self.Teams = self:Add( "DScrollPanel" )
+        self.Teams:Dock( FILL )
+        self.Teams:DockMargin( 0, 0, 0, 10 )
+        local scrollBar = self.Teams:GetVBar()
         scrollBar:DockMargin( -5, 0, 0, 0 )
         function scrollBar:Paint( w, h )
             surface.SetDrawColor( 10, 10, 10, 100 )
@@ -240,13 +244,34 @@ local SCORE_BOARD = {
             draw.RoundedBox( 0, 0, 0, w, h, Color( 150, 200, 150, 150 ) )
         end
 
-        self.Title = self.Scores:Add( PLAYER_LINE_TITLE )
+        self.TeamList0 = self.Teams:Add( "DPanel" )
+        self.TeamList0:Dock( LEFT )
+        --self.TeamList0:SetContentAlignment( 4 )
+        self.TeamList0:SetHeight( 600 )
+
+        self.TeamList1 = self.Teams:Add( "DPanel" )
+        self.TeamList1:Dock( FILL )
+        --self.TeamList1:SetContentAlignment( 5 )
+
+        self.TeamList2 = self.Teams:Add( "DPanel" )
+        self.TeamList2:Dock( RIGHT )
+        --self.TeamList2:SetContentAlignment( 6 )
+
+        self.Title0 = self.TeamList0:Add( PLAYER_LINE_TITLE )
+        self.Title0.TeamNum = 0
+        self.Title1 = self.TeamList1:Add( PLAYER_LINE_TITLE )
+        self.Title1.TeamNum = 1
+        self.Title2 = self.TeamList2:Add( PLAYER_LINE_TITLE )
+        self.Title2.TeamNum = 2
+
+        -- self.Title = self.Teams:Add( PLAYER_LINE_TITLE )
     end,
 
     PerformLayout = function( self )
-
-        self:SetSize( 700, ScrH() - 100 )
-        self:SetPos( ScrW()/2 - 700 / 2, 100 / 2 )
+        
+        local panelwidth = 1200
+        self:SetSize( panelwidth, ScrH() - 100 )
+        self:SetPos( ScrW()/2 - panelwidth / 2, 100 / 2 )
 
     end,
 
@@ -266,8 +291,24 @@ local SCORE_BOARD = {
 
             pl.ScoreEntry = vgui.CreateFromTable( PLAYER_LINE, pl.ScoreEntry )
             pl.ScoreEntry:Setup( pl )
+            
+            if( pl:Team() == 0 ) then
 
-            self.Scores:AddItem( pl.ScoreEntry )
+                self.TeamList0:Add( pl.ScoreEntry )
+
+            elseif( pl:Team() == 1 ) then
+
+                self.TeamList1:Add( pl.ScoreEntry )
+
+            elseif( pl:Team() == 2 ) then
+
+                self.TeamList2:Add( pl.ScoreEntry )
+
+            -- else
+
+            end
+
+            -- self.Scores:AddItem( pl.ScoreEntry )
 
         end
 

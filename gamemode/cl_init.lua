@@ -63,7 +63,7 @@ hook.Add("HUDPaint", "HUDIdent", function()
 end)
 
 function GM:Initialize()
-	surface.PlaySound( "temp_song0.mp3" )
+	-- surface.PlaySound( "temp_song0.mp3" )
 
 	print("Starting motionsensor" )
 
