@@ -45,6 +45,7 @@ function GM:PlayerSpawn( ply )
 	ply:SetupTeam( math.random( 0, 2 ) )
 
 	timer.Create( "HPregen" .. ply:UserID(), 1, 0, function()
+		if( !IsValid( ply ) ) then return end
 		ply:SetHealth( math.Clamp( ply:Health() + 1, 0, ply:GetMaxHealth() ) )
 
 		--PrintMessage( HUD_PRINTTALK, "Reps Left: " .. timer.RepsLeft( "HPregen" .. ply:UserID() ) )

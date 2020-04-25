@@ -220,6 +220,42 @@ local PLAYER_LINE = {
 
 PLAYER_LINE = vgui.RegisterTable( PLAYER_LINE, "DPanel" )
 
+local SCORE_BOARD_TEAM = {
+    Init = function( self )
+        
+        self.Title = self:Add( PLAYER_LINE_TITLE )
+
+        local TeamsWidth = 1200 / 3
+        self:Dock( TOP )
+        self:DockMargin( TeamsWidth/2, 0, TeamsWidth/2, 0 )
+        self:SetPaintBackground( true )
+
+    end,
+
+    PerformLayout = function( self )
+
+        --local LargestNum11 = math.random( 60, 800 ) --#team.GetPlayers( 1 ) * 58
+        --self:SetHeight( LargestNum11 )
+
+    end,
+
+    Paint = function( self, w, h )
+        -- draw.RoundedBox( 8, 0, 0, w, h, Color( 10, 10, 10, 150 ) )
+
+
+        --local LargestNum11 = math.random( 0, 200 ) --#team.GetPlayers( 1 ) * 58
+        --self:Height( 0, LargestNum11 )
+
+    end,
+
+    Think = function( self, w, h )
+        
+
+    end
+}
+
+SCORE_BOARD_TEAM = vgui.RegisterTable( SCORE_BOARD_TEAM, "DPanel" )
+
 local SCORE_BOARD = {
     Init = function( self )
 
@@ -249,39 +285,21 @@ local SCORE_BOARD = {
             draw.RoundedBox( 0, 0, 0, w, h, Color( 150, 200, 150, 150 ) )
         end
 
-        local TeamsWidth = 1200 / 3
+        --self.TeamList={}
+        self.TeamFrame0 = self.Teams:Add( SCORE_BOARD_TEAM )
+        self.TeamFrame0.Title.TeamNum = 0 
 
-        self.TeamList0 = self.Teams:Add( "DListLayout" )
-        self.TeamList0:Dock( LEFT )
-        --self.TeamList0:SetContentAlignment( 4 )
-        self.TeamList0:SetWidth( TeamsWidth )
+        self.TeamFrame1 = self.Teams:Add( SCORE_BOARD_TEAM )
+        self.TeamFrame1.Title.TeamNum = 1 
 
-        self.TeamList1 = self.Teams:Add( "DListLayout" )
-        self.TeamList1:Dock( LEFT )
-        self.TeamList1:SetPaintBackground( true )
-        self.TeamList1:SetSize( 100, 400 )
-        --for i=1, 50 do
-        --    self.TeamList1:Add( Label( "Test " .. i ) )
-        --end
-        --self.TeamList1:SizeToContents()
-        --self.TeamList1:SizeToChildren( true )
-        self.TeamList1:SetWidth( TeamsWidth )
-        
-        --self.TeamList1:SetContentAlignment( 5 )
+        self.TeamFrame2 = self.Teams:Add( SCORE_BOARD_TEAM )
+        self.TeamFrame2.Title.TeamNum = 2 
 
-        self.TeamList2 = self.Teams:Add( "DListLayout" )
-        self.TeamList2:Dock( LEFT )
-        self.TeamList2:SetWidth( TeamsWidth )
-        --self.TeamList2:SetContentAlignment( 6 )
-
-        self.Title0 = self.TeamList0:Add( PLAYER_LINE_TITLE )
-        self.Title0.TeamNum = 0
-        self.Title1 = self.TeamList1:Add( PLAYER_LINE_TITLE )
-        self.Title1.TeamNum = 1
-        self.Title2 = self.TeamList2:Add( PLAYER_LINE_TITLE )
-        self.Title2.TeamNum = 2
-
-        -- self.Title = self.Teams:Add( PLAYER_LINE_TITLE )
+        self.TeamFrames = {}
+        self.TeamFrames[0] = self.TeamFrame0
+        self.TeamFrames[1] = self.TeamFrame1
+        self.TeamFrames[2] = self.TeamFrame2
+       
     end,
 
     PerformLayout = function( self )
@@ -301,39 +319,22 @@ local SCORE_BOARD = {
     Think = function( self, w, h )
 
         self.Name:SetText( GetHostName() )
-            
-        print( #self.TeamList0:GetChildren() )
-        print( #self.TeamList1:GetChildren() )
-        print( #self.TeamList2:GetChildren() )
 
         for id, pl in pairs( player.GetAll() ) do
 
             if( IsValid( pl.ScoreEntry ) ) then 
 
-                if( pl:Team() == 0 ) then
+                self.TeamFrames[pl:Team()]:InvalidateLayout( false )
+                self.TeamFrames[pl:Team()]:SizeToChildren( false, true )
 
-                    self.TeamList0:Add( pl.ScoreEntry )
-                    self.TeamList0:SetHeight( table.Count( self.TeamList0:GetChildren() ) * 38 )
+                self.TeamFrames[pl:Team()]:Add( pl.ScoreEntry )
 
-                elseif( pl:Team() == 1 ) then
+            else
 
-                    self.TeamList1:Add( pl.ScoreEntry )
-                    self.TeamList1:SetHeight( table.Count( self.TeamList1:GetChildren() ) * 38 )
+                pl.ScoreEntry = vgui.CreateFromTable( PLAYER_LINE, pl.ScoreEntry )
+                pl.ScoreEntry:Setup( pl )
 
-                elseif( pl:Team() == 2 ) then
-
-                    self.TeamList2:Add( pl.ScoreEntry )
-                    self.TeamList2:SetHeight( table.Count( self.TeamList2:GetChildren() ) * 38 )
-
-                end
-
-                continue 
-            
-            end -- && pl.ScoreEntry.Player:Team() ==
-
-            pl.ScoreEntry = vgui.CreateFromTable( PLAYER_LINE, pl.ScoreEntry )
-            pl.ScoreEntry:Setup( pl )
-            
+            end
         end
     end
 }
