@@ -2,6 +2,7 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "teamsetup.lua" )
 AddCSLuaFile( "cl_scoreboard.lua" )
+AddCSLuaFile( "roundsystem.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 
 -- sounds
@@ -12,6 +13,7 @@ resource.AddFile( "materials/models/parrot_rc/parrot/parrot_texture.vmt" )
 
 include ( "shared.lua" )
 include ( "teamsetup.lua" )
+include ( "roundsystem.lua" )
 include ( "concommands.lua" )
 
 util.AddNetworkString( "f4menu" )
@@ -54,10 +56,31 @@ function GM:PlayerSpawn( ply )
 	end)
 
 	test_trail = util.SpriteTrail( ply, 0, Color(math.Rand(0, 255), math.Rand(0, 255), math.Rand(0, 255)), false, 100, 0, 3, 1/(100) * 0.5, "trails/plasma.vmt")
+
+	if ( roundActive == true ) then
+		ply:KillSilent()
+		return
+	else
+		RoundStart()
+	end
+
 end
 
 function GM:PlayerDeath( ply )
 	SafeRemoveEntity( test_trail )
+
+	RoundEndCheck()
+end
+
+function GM:PlayerDeathThink( ply )
+
+	if ( roundActive == false ) then
+		ply:Spawn()
+		return true
+	else
+		return false
+	end
+
 end
 
 function GM:PlayerDisconnected( ply )
@@ -66,6 +89,7 @@ function GM:PlayerDisconnected( ply )
 		timer.Remove( "HPregen" .. ply:UserID() )
 	end
 
+	RoundEndCheck()
 end
 
 -- Choose the model for hands according to their player model.
