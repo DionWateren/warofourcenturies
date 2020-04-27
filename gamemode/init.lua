@@ -18,6 +18,9 @@ include ( "concommands.lua" )
 
 util.AddNetworkString( "f4menu" )
 
+util.AddNetworkString( "round_timer" )
+util.AddNetworkString( "round_active" )
+
 hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam ) 
 
 	text = string.lower( text )
@@ -44,7 +47,7 @@ function GM:PlayerSpawn( ply )
 	ply:ChatPrint("You have spawned!")
 
 	ply:SetupHands()
-	ply:SetupTeam( math.random( 0, 2 ) )
+	ply:SetupTeam( AutoBalance() )
 
 	timer.Create( "HPregen" .. ply:UserID(), 1, 0, function()
 		if( !IsValid( ply ) ) then return end
@@ -69,7 +72,7 @@ end
 function GM:PlayerDeath( ply )
 	SafeRemoveEntity( test_trail )
 
-	RoundEndCheck()
+	-- RoundEndCheck()
 end
 
 function GM:PlayerDeathThink( ply )
