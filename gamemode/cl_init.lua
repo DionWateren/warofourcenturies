@@ -68,6 +68,10 @@ net.Receive( "round_active", function( len )
 	RoundActive = net.ReadBool()
 end)
 
+local place_holder_0 = Material( "hud/0_potato_logo.png",	"noclamp" )
+local place_holder_1 = Material( "hud/1_penguin_logo.png", 	"noclamp" )
+local place_holder_2 = Material( "hud/2_banana_logo.png", 	"noclamp" )
+
 hook.Add("HUDPaint", "HUDIdent", function()
 
 	if( !IsValid( TimerPanel ) ) then
@@ -80,12 +84,18 @@ hook.Add("HUDPaint", "HUDIdent", function()
 
 	local ply = LocalPlayer()
 
-	surface.SetDrawColor( 50, 50, 50, 255)
-	surface.DrawRect( 30 - 2, ScrH() - 70 - 2, 300 + 4, 30 + 4)
+	if ( ply:Team() == 0 ) then
+		surface.SetMaterial( place_holder_0 )
+	elseif ( ply:Team() == 1 ) then
+		surface.SetMaterial( place_holder_1 )
+	elseif ( ply:Team() == 2 ) then
+		surface.SetMaterial( place_holder_2 )
+	end
+	--surface.DrawTexturedRect( 30 - 2, ScrH() - 148 - 2, 128 + 4, 128 + 4)
 
-	surface.SetDrawColor( 255, 100, 100, 255)
-	surface.SetTexture( 10 )
-	surface.DrawTexturedRect( 30, ScrH() - 70, 300*( ply:Health() / ply:GetMaxHealth() ), 30 )
+	--surface.SetTexture( 10 )
+	surface.SetDrawColor( 255, 200, 200, 255)
+	surface.DrawTexturedRect( 30, ScrH() - 148, 128*( ply:Health() / ply:GetMaxHealth() ), 128 )
 
 	draw.SimpleText( ply:Health(), "MyFont", 30 + 150, ScrH() - 70 + 15, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 

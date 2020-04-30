@@ -326,7 +326,6 @@ local SCORE_BOARD = {
 
                 self.TeamFrames[pl:Team()]:InvalidateLayout( false )
                 self.TeamFrames[pl:Team()]:SizeToChildren( false, true )
-
                 self.TeamFrames[pl:Team()]:Add( pl.ScoreEntry )
 
             else

@@ -3,20 +3,26 @@ local ply = FindMetaTable( "Player" )
 local teams = {}
 
 teams[0] = {
-    name = "Red",
+    name = "Royal Potatos",
     color = Vector( 1.0, 0.0, 0.0 ),
-    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"}
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+    p_models = { [0] = "Parrotv3" },
 }
 teams[1] = {
-    name = "Blue",
+    name = "Curious Penguins",
     color = Vector( 0.0, 0.0, 1.0 ),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+    p_models = { [0] = "BFOL_Penguin_0" },
 }
 teams[2] = {
-    name = "Yellow",
+    name = "Crazy Bananas",
     color = Vector( 1.0, 1.0, 0.0 ),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+    p_models = { [0] = "BFOL_Banana-Man_0" },
 }
+
+player_manager.AddValidModel( "BFOL_Banana-Man_0", "models/player/rebs/BFOL_Banana-Man_0/BFOL_Banana-Man.mdl" );
+player_manager.AddValidModel( "BFOL_Penguin_0", "models/player/rebs/BFOL_Penguin-Man_0/BFOL_Penguin.mdl" );
 
 player_manager.AddValidModel( "Parrotv3", "models/player/rebs/parrotv3_pm/parrotv3.mdl" );
 
@@ -29,27 +35,19 @@ function ply:SetupTeam( n )
     self:SetMaxHealth( 200 )
     self:SetWalkSpeed( 100 )
     self:SetRunSpeed( 1000 )
-    if( n == 0 ) then
 
-        local models = player_manager.AllValidModels()
-        self:SetModel( models["Parrotv3"] )
+    --print( type( teams[n].p_models[0] ) )
+    --print( teams[n].p_models[0] )
 
-    elseif( n == 1 ) then
-
-        self:SetModel( "models/player/skeleton.mdl" )
-
-    else
-
-        self:SetModel( "models/player/Group03m/Male_0" .. math.random(1,9) .. ".mdl" )
-        
-    end
+    local pm_models = player_manager.AllValidModels()
+    self:SetModel( pm_models[teams[n].p_models[0]] )
 
     self:GiveWeapons( n )
     
 end
 
 function ply:GiveWeapons( n )
-    for k, weapon in pairs(teams[n].weapons) do
-        self:Give(weapon)
+    for k, weapon in pairs( teams[n].weapons ) do
+        self:Give( weapon )
     end
 end
