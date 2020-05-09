@@ -179,6 +179,18 @@ net.Receive( "f4menu", function()
 	end
 end)
 
+local temp_death_sound = Sound( "effects/death_0.mp3" )
+
+net.Receive( "playdeathsound", function()
+
+	--if ( IsValid( temp_death_sound ) ) then
+	sound.Play( temp_death_sound, LocalPlayer():GetPos() )
+	--surface.PlaySound( temp_death_sound )
+
+	--end
+
+end)
+
 function GM:HUDShouldDraw( name )
 	local hud = {"CHudHealth", "CHudBattery", "CHudAmmo"}
 	for k, element in pairs( hud ) do
@@ -195,38 +207,3 @@ function GetActiveWeapon( ply )
 
 	return wep
 end
-
---local message = "My Text"
---
---hook.Add("HUDPaint", "HUDIdent", function()
---
---	surface.SetAlphaMultiplier( 1 )
---
---	surface.SetDrawColor( 200, 200, 100, 125 )
---
---	surface.DrawOutlinedRect( 10, 10, 100, 100 )
---	surface.DrawCircle( 120, 60, 50, 100, 200, 200, 125)
---	surface.DrawLine( 230, 10, 330, 110)
---	surface.DrawRect( 110, 10, 100, 100)
---
---	surface.SetTexture( 23 )
---	surface.DrawTexturedRect( 10, 120, 100, 100 )
---
---	local width, height = surface.GetTextSize( message )
---
---	surface.SetFont( "MyFont" )
---	surface.SetTextPos( ScrW()/2 - width/2, ScrH()/2 - height/2 )
---	surface.SetTextColor( 100, 100, 200, 125 )
---	surface.DrawText( message )
---
---	
---end)
-
---hook.Add("HUDPaint", "HUDIdent", function()
---
---	draw.RoundedBox( 0, 0, 0, ScrW(), ScrH(), Color( 120, 120, 120, 120 ) )
---	draw.RoundedBox( 0, 0, 0, 100, 100, Color( 0, 0, 0, 255 ) )
---
---	draw.SimpleText("Whatever", "DermaDefault", ScrW()/2, ScrH()/2, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
---
---end)

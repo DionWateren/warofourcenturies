@@ -4,23 +4,10 @@ AddCSLuaFile( "teamsetup.lua" )
 AddCSLuaFile( "cl_scoreboard.lua" )
 AddCSLuaFile( "roundsystem.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
+AddCSLuaFile( "resources.lua" )
 
--- sounds
---resource.AddFile( "sound/temp_song0.mp3" )
 
--- materials
-resource.AddFile( "materials/hud/0_potato_logo.png" )
-resource.AddFile( "materials/hud/1_penguin_logo.png" )
-resource.AddFile( "materials/hud/2_banana_logo.png" )
-
--- models
-resource.AddFile( "models/player/rebs/BFOL_Banana-Man_0/BFOL_Banana_Man.mdl" )
-resource.AddFile( "materials/models/rebs/BFOL_Banana-Man_0/Banana_Single_Main.vmt" )
-resource.AddFile( "models/player/rebs/BFOL_Penguin-Man_0/BFOL_Penguin.mdl" )
-resource.AddFile( "materials/models/rebs/BFOL_Penguin-Man_0/MainBody.vmt" )
-
-resource.AddFile( "models/player/rebs/parrotv3_pm/parrotv3.mdl" )
-resource.AddFile( "materials/models/parrot_rc/parrot/parrot_texture.vmt" )
+include ( "resources.lua" )
 
 include ( "shared.lua" )
 include ( "teamsetup.lua" )
@@ -28,6 +15,7 @@ include ( "roundsystem.lua" )
 include ( "concommands.lua" )
 
 util.AddNetworkString( "f4menu" )
+util.AddNetworkString( "playdeathsound" )
 
 util.AddNetworkString( "round_timer" )
 util.AddNetworkString( "round_active" )
@@ -54,6 +42,12 @@ hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam )
 
 end)
 
+function GM:Initialize()
+
+	file.Write("soundscripts.txt",table.concat(sound.GetTable(),"\n"))
+
+end
+
 function GM:PlayerSpawn( ply )
 	ply:ChatPrint("You have spawned!")
 
@@ -72,6 +66,8 @@ function GM:PlayerSpawn( ply )
 
 	test_trail = util.SpriteTrail( ply, 0, Color(math.Rand(0, 255), math.Rand(0, 255), math.Rand(0, 255)), false, 100, 0, 3, 1/(100) * 0.5, "trails/plasma.vmt")
 
+	ply:GiveAmmo( 100, "SMG1", false )
+
 	if ( roundActive == true ) then
 		ply:KillSilent()
 		return
@@ -81,7 +77,19 @@ function GM:PlayerSpawn( ply )
 
 end
 
+
+function GM:PlayerDeathSound()
+	return false
+end
+
+local temp_death_sound = Sound( "effects/death_0.mp3" )
+
 function GM:PlayerDeath( ply )
+
+	sound.Play( temp_death_sound, ply:GetPos(), 100, math.random( 25, 175 ), 1 )
+	--net.Start( "playdeathsound" )
+	--net.Send( ply )
+
 	SafeRemoveEntity( test_trail )
 
 	-- RoundEndCheck()

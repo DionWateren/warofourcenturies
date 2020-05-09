@@ -5,19 +5,19 @@ local teams = {}
 teams[0] = {
     name = "Royal Potatos",
     color = Vector( 1.0, 0.0, 0.0 ),
-    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
     p_models = { [0] = "Parrotv3" },
 }
 teams[1] = {
     name = "Curious Penguins",
     color = Vector( 0.0, 0.0, 1.0 ),
-    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
     p_models = { [0] = "BFOL_Penguin_0" },
 }
 teams[2] = {
     name = "Crazy Bananas",
     color = Vector( 1.0, 1.0, 0.0 ),
-    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun"},
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"},
     p_models = { [0] = "BFOL_Banana-Man_0" },
 }
 
