@@ -72,6 +72,42 @@ local place_holder_0 = Material( "hud/0_potato_logo.png",	"noclamp" )
 local place_holder_1 = Material( "hud/1_penguin_logo.png", 	"noclamp" )
 local place_holder_2 = Material( "hud/2_banana_logo.png", 	"noclamp" )
 
+local alpha = 0
+
+hook.Add("PostDrawTranslucentRenderables", "aaaa", function()
+    alpha = 128 + math.sin(CurTime()) * 127;
+
+    --render.SetColorMaterial();
+
+	--[[
+		when you draw a sphere, you have to specify what material the sphere is
+		going to have before rendering it, render.SetColorMaterial()
+		just sets it to a white material so we can recolor it easily.
+	--]]
+	render.SetColorMaterial()
+
+	-- The position to render the sphere at, in this case, the looking position of the local player
+	local pos = LocalPlayer():GetEyeTrace().HitPos
+
+	-- Draw the sphere!
+	render.DrawSphere( pos, 50, 10, 10, Color( 0, 175, 175, alpha ) )
+
+    render.DrawLine( pos, Vector(0, 0, 256), Color(0, 0, 255, alpha), false );
+
+	local trace = LocalPlayer():GetEyeTrace()
+	local angle = trace.HitNormal:Angle()
+		
+	render.DrawLine( trace.HitPos, trace.HitPos + 8 * angle:Forward(), Color( 255, 0, 0 ), true )
+	render.DrawLine( trace.HitPos, trace.HitPos + 8 * -angle:Right(), Color( 0, 255, 0 ), true )
+	render.DrawLine( trace.HitPos, trace.HitPos + 8 * angle:Up(), Color( 0, 0, 255 ), true )
+		
+	cam.Start3D2D( trace.HitPos, angle, 1 )
+		surface.SetDrawColor( 255, 165, 0, 255 )
+		surface.DrawRect( 0, 0, 8, 8 )
+		render.DrawLine( Vector( 0, 0, 0 ), Vector( 8, 8, 8 ), Color( 100, 149, 237, 255 ), true )
+	cam.End3D2D()
+end)
+
 hook.Add("HUDPaint", "HUDIdent", function()
 
 	if( !IsValid( TimerPanel ) ) then
@@ -100,7 +136,7 @@ hook.Add("HUDPaint", "HUDIdent", function()
 	draw.SimpleText( ply:Health(), "MyFont", 30 + 150, ScrH() - 70 + 15, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 
 	surface.SetDrawColor( 255, 0, 0, 255 )
-	surface.DrawCircle( 50, 50, 25, 255, 0, 0 )
+	surface.DrawCircle( 50, 50, 100 + math.sin( CurTime() ) * 50, 255, 0, 0 )
 	
 	if ( !IsValid( ply ) ) then return -1 end
 
@@ -203,7 +239,7 @@ function GetActiveWeapon( ply )
 	if ( !IsValid( ply ) ) then return -1 end
 
 	local wep = ply:GetActiveWeapon()
-	if ( !IsValid(wep) ) then return -1 end
+	if ( !IsValid( wep ) ) then return -1 end
 
 	return wep
 end

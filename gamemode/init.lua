@@ -106,6 +106,12 @@ function GM:PlayerDeathThink( ply )
 
 end
 
+-- function GM:PlayerSelectSpawn( ply, transition )
+-- 	print('player is selecting spawn')
+-- 	local v = Vector{ 0, 0, 0 }
+-- 	return v
+-- end
+
 function GM:PlayerDisconnected( ply )
 
 	if ( timer.Exists( "HPregen" .. ply:UserID() ) ) then
