@@ -6,7 +6,6 @@ AddCSLuaFile( "roundsystem.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 AddCSLuaFile( "resources.lua" )
 
-
 include ( "resources.lua" )
 
 include ( "shared.lua" )
@@ -48,12 +47,18 @@ function GM:Initialize()
 
 end
 
+function GM:PlayerInitialSpawn( ply, transition )
+	print("Player Initial Spawn")
+
+	ply:SetupTeam( AutoBalance() )
+
+end
+
 function GM:PlayerSpawn( ply )
-	ply:ChatPrint("You have spawned!")
+	print("Player Spawn")
 
 	ply:SetupHands()
-	ply:SetupTeam( math.random( 0, 2 ) )
-	--ply:SetupTeam( AutoBalance() )
+	ply:GiveWeapons()
 
 	timer.Create( "HPregen" .. ply:UserID(), 1, 0, function()
 		if( !IsValid( ply ) ) then return end
@@ -106,14 +111,20 @@ function GM:PlayerDeathThink( ply )
 
 end
 
--- function GM:PlayerSelectSpawn( ply, transition )
--- 	print('player is selecting spawn')
--- 	local v = Vector{ 0, 0, 0 }
--- 	return v
--- end
+function GM:PlayerSelectSpawn( ply, transition )
+	print('player is selecting spawn')
+	
+	local spawnPointEnt = ply:GetTeamSpawnPointEnt()
+	if (spawnPointEnt != nill) then
+		return spawnPointEnt
+	end
+
+	print("Spawning player on default spawn!")
+
+	return ents.FindByClass("info_player_start")[0]
+end
 
 function GM:PlayerDisconnected( ply )
-
 	if ( timer.Exists( "HPregen" .. ply:UserID() ) ) then
 		timer.Remove( "HPregen" .. ply:UserID() )
 	end
@@ -170,8 +181,5 @@ end
 
 function GM:PlayerDisconnected( ply )
 
-	--if (motionsensor.Active()) then
-	--	motionsensor.Stop()
-	--end
 
 end

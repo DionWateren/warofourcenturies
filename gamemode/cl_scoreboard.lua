@@ -321,9 +321,8 @@ local SCORE_BOARD = {
         self.Name:SetText( GetHostName() )
 
         for id, pl in pairs( player.GetAll() ) do
-
             if( IsValid( pl.ScoreEntry ) ) then 
-
+                
                 self.TeamFrames[pl:Team()]:InvalidateLayout( false )
                 self.TeamFrames[pl:Team()]:SizeToChildren( false, true )
                 self.TeamFrames[pl:Team()]:Add( pl.ScoreEntry )

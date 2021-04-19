@@ -74,7 +74,7 @@ local place_holder_2 = Material( "hud/2_banana_logo.png", 	"noclamp" )
 
 local alpha = 0
 
-hook.Add("PostDrawTranslucentRenderables", "aaaa", function()
+hook.Add("PostDrawTranslucentRenderables", "DebugDrawLines", function()
     alpha = 128 + math.sin(CurTime()) * 127;
 
     --render.SetColorMaterial();
@@ -153,50 +153,14 @@ hook.Add("HUDPaint", "HUDIdent", function()
 	surface.SetTexture( 10 )
 	surface.DrawTexturedRect( ScrW() - 100, ScrH() - 200, 30, 150*(clip1 / maxclip1) )
 
-	--for i=1, 11 do
-	--	surface.SetTexture( i )
-	--	surface.DrawTexturedRect( 10 + 100*i, 10, 100, 100)
-	--end
---
-	--for i=1, 11 do
-	--	surface.SetTexture( 11 + i )
-	--	surface.DrawTexturedRect( 10 + 100*i, 110, 100, 100)
-	--end
-
 end)
 
 function GM:Initialize()
 
-	-- surface.PlaySound( "temp_song0.mp3" )
-
-	print("Trying to start motionsensor" )
-
-	if ( !motionsensor.IsAvailable() ) then 
-		print("Motionsensor not available!" )
-		return 
-	end
-
-	--if ( !motionsensor.IsActive() ) then 
-	--	print("Motionsensor not active!" )
-	--	return 
-	--end
-
-	motionsensor.Start()
 end
 
 function GM:Think()
 
-	if ( !motionsensor.IsAvailable() ) then return end
-	
-	if ( !motionsensor.IsActive() ) then return end
-
-	local ply = LocalPlayer()
-
-	for k, v in pairs( motionsensor.DebugBones ) do
- 
-		debugoverlay.Line( ply:MotionSensorPos( v[1] ), ply:MotionSensorPos( v[2] ), 0.5, Color(0, 255, 0), true )
-	
-	end
 
 end
 
@@ -227,10 +191,15 @@ net.Receive( "playdeathsound", function()
 
 end)
 
+local hideHud = {
+	["CHudHealth"] 	= true,
+	["CHudBattery"] = true,
+	["CHudAmmo"] 	= true
+}
+
 function GM:HUDShouldDraw( name )
-	local hud = {"CHudHealth", "CHudBattery", "CHudAmmo"}
-	for k, element in pairs( hud ) do
-		if name == element then return false end
+	if ( hideHud[name] ) then
+		return false
 	end
 	return true
 end

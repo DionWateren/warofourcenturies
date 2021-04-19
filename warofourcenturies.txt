@@ -3,6 +3,7 @@
 	"base"		"base"
 	"title"		"War of our Centuries"
 	"maps"		"^wooc_"
+	"category"	"pvp"
 	"menusystem"	"1"
 
 	"settings"

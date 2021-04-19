@@ -114,31 +114,31 @@ end
 
 function AutoBalance()
 
-    if ( table.Count( team.GetPlayers( 0 ) ) > table.Count( team.GetPlayers( 1 ) ) ) then
+    if ( table.Count( team.GetPlayers( 1 ) ) > table.Count( team.GetPlayers( 2 ) ) ) then
+        return 2
+    elseif ( table.Count( team.GetPlayers( 1 ) ) < table.Count( team.GetPlayers( 2 ) ) ) then
         return 1
-    elseif ( table.Count( team.GetPlayers( 0 ) ) < table.Count( team.GetPlayers( 1 ) ) ) then
-        return 0
     else
         local redAvgKDR = 0
         local blueAvgKDR = 0
-        for k, v in pairs( team.GetPlayers( 0 ) ) do
+        for k, v in pairs( team.GetPlayers( 1 ) ) do
             redAvgKDR = redAvgKDR + v:Frags()/v:Deaths()
         end
-        redAvgKDR = redAvgKDR/table.Count( team.GetPlayers( 0 ) )
+        redAvgKDR = redAvgKDR/table.Count( team.GetPlayers( 1 ) )
 
-        for k, v in pairs( team.GetPlayers( 1 ) ) do
+        for k, v in pairs( team.GetPlayers( 2 ) ) do
             blueAvgKDR = blueAvgKDR + v:Frags()/v:Deaths()
         end
-        blueAvgKDR = blueAvgKDR/table.Count( team.GetPlayers( 1 ) )
+        blueAvgKDR = blueAvgKDR/table.Count( team.GetPlayers( 2 ) )
 
         print( "Auto Balance: Red KDR - " .. redAvgKDR .. " | Blue KDR - " .. blueAvgKDR )
 
         if ( redAvgKDR > blueAvgKDR ) then
-            return 1
+            return 2
         elseif ( redAvgKDR < blueAvgKDR ) then
-            return 0
+            return 1
         else
-            return math.random( 0, 1 )
+            return math.random( 1, 2 )
         end
     end
 end
