@@ -40,6 +40,8 @@ function SetTeamSpawnPoints( teamId )
 end
 
 function InitialiseTeams()
+    print("Initialising teams")
+
     for k, v in ipairs( teams ) do
 
         team.SetUp( k, v.name, v.color )
@@ -48,7 +50,6 @@ function InitialiseTeams()
 
     end
 end
-InitialiseTeams()
 
 function ply:SetupTeam( n )
     if ( not teams[n] ) then return end
@@ -77,10 +78,22 @@ function ply:GiveWeapons()
 end
 
 function ply:GetTeamSpawnPointEnt(  )
-    if (table.IsEmpty(teams)) then return 0 end
+    if (table.IsEmpty(teams)) then 
+        print("[ERROR] No team data set")
+        return 0 
+    end
     
     local teamTable = teams[self:Team()]
-    if (teamTable == nill) then return 0 end
+    if (teamTable == nill) then 
+        print("[ERROR] Team Table is empty")
+        PrintTable(teamTable)
+        return 0 
+    end
+
+    // if not spawn data is set, recreate it
+    if (table.IsEmpty(teamTable.spawnPoints)) then
+        SetTeamSpawnPoints(self:Team())
+    end
 
     local pointIndex = table.Random( teamTable.spawnPoints )
     return ents.GetByIndex(pointIndex)

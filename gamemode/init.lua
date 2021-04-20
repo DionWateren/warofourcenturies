@@ -13,6 +13,8 @@ include ( "teamsetup.lua" )
 include ( "roundsystem.lua" )
 include ( "concommands.lua" )
 
+include ( "nextbot_example.lua" )
+
 util.AddNetworkString( "f4menu" )
 util.AddNetworkString( "playdeathsound" )
 
@@ -45,6 +47,23 @@ function GM:Initialize()
 
 	file.Write("soundscripts.txt",table.concat(sound.GetTable(),"\n"))
 
+	InitialiseTeams()
+
+end
+
+function GM:Think()
+	if (!roundActive) then 
+		local nextbotTable = player.GetBots()
+
+		for k, v in pairs(nextbotTable) do
+			
+			if(!v:Alive()) then
+				
+				v:Spawn()
+
+			end
+		end
+	end
 end
 
 function GM:PlayerInitialSpawn( ply, transition )
@@ -101,7 +120,7 @@ function GM:PlayerDeath( ply )
 end
 
 function GM:PlayerDeathThink( ply )
-
+	
 	if ( roundActive == false ) then
 		ply:Spawn()
 		return true
@@ -167,11 +186,14 @@ function GM:PlayerShouldTakeDamage(ply, attacker)
 end
 
 function GM:ShowSpare1( ply )
-	local botamount = 10
-	PrintMessage( HUD_PRINTTALK, "Spawning " .. botamount .. " bots" )
-	for i=0, botamount do
-		RunConsoleCommand( "bot", "" )
-	end
+
+	player.CreateNextBot( table.Random(botNameTable) )
+
+	-- local botamount = 2
+	-- PrintMessage( HUD_PRINTTALK, "Spawning " .. botamount .. " bots" )
+	-- for i=0, botamount do
+	-- 	RunConsoleCommand( "bot", "" )
+	-- end
 end
 
 function GM:ShowSpare2( ply )

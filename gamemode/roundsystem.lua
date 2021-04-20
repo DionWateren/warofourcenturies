@@ -55,12 +55,12 @@ function RoundEndCheck()
         local RedAlive = 0  
         local BlueAlive = 0  
 
-        for k, v in pairs( team.GetPlayers( 0 ) ) do
+        for k, v in pairs( team.GetPlayers( 1 ) ) do
             if( v:Alive() ) then
                 RedAlive = RedAlive + 1
             end
         end
-        for k, v in pairs( team.GetPlayers( 1 ) ) do
+        for k, v in pairs( team.GetPlayers( 2 ) ) do
             if( v:Alive() ) then
                 BlueAlive = BlueAlive + 1
             end
