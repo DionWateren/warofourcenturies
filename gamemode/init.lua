@@ -1,7 +1,10 @@
 AddCSLuaFile( "shared.lua" )
+
 AddCSLuaFile( "cl_init.lua" )
-AddCSLuaFile( "teamsetup.lua" )
 AddCSLuaFile( "cl_scoreboard.lua" )
+AddCSLuaFile( "cl_handle_capture_points.lua" )
+
+AddCSLuaFile( "teamsetup.lua" )
 AddCSLuaFile( "roundsystem.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 AddCSLuaFile( "resources.lua" )
@@ -52,7 +55,7 @@ function GM:Initialize()
 end
 
 function GM:Think()
-	if (!roundActive) then 
+	if (false) then 
 		local nextbotTable = player.GetBots()
 
 		for k, v in pairs(nextbotTable) do

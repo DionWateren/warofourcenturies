@@ -1,6 +1,7 @@
 include( "shared.lua" )
 include( "cl_scoreboard.lua" )
 include( "vgui/menu_main.lua" )
+include( "cl_handle_capture_points.lua" )
 
 surface.CreateFont( "MyFont", {
 	font = "Arial",
@@ -77,22 +78,10 @@ local alpha = 0
 hook.Add("PostDrawTranslucentRenderables", "DebugDrawLines", function()
     alpha = 128 + math.sin(CurTime()) * 127;
 
-    --render.SetColorMaterial();
-
-	--[[
-		when you draw a sphere, you have to specify what material the sphere is
-		going to have before rendering it, render.SetColorMaterial()
-		just sets it to a white material so we can recolor it easily.
-	--]]
 	render.SetColorMaterial()
 
 	-- The position to render the sphere at, in this case, the looking position of the local player
 	local pos = LocalPlayer():GetEyeTrace().HitPos
-
-	-- Draw the sphere!
-	render.DrawSphere( pos, 50, 10, 10, Color( 0, 175, 175, alpha ) )
-
-    render.DrawLine( pos, Vector(0, 0, 256), Color(0, 0, 255, alpha), false );
 
 	local trace = LocalPlayer():GetEyeTrace()
 	local angle = trace.HitNormal:Angle()

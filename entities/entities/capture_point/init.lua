@@ -5,23 +5,27 @@ include("shared.lua")
 
 function ENT:Initialize()
 
-    self:SetModel("models/hunter/blocks/cube025x025x025.mdl")
-    self:PhysicsInit(SOLID_VPHYSICS)
-    self:SetMoveType(MOVETYPE_VPHYSICS)
-    self:SetSolid(SOLID_VPHYSICS)
+    self:SetModel("models/mechanics/wheels/tractor.mdl")
+    self:PhysicsInit(SOLID_NONE)
+    self:SetMoveType(MOVETYPE_NONE)
+    self:SetSolid(SOLID_NONE)
     
-    self:SetColor(Color(120, 120, 120))
-
-    local phys = self:GetPhysicsObject()
-
-    if(phys:IsValid()) then
-        phys:Wake()
-    end
+    self:SetColor(Color(120, 255, 120))
 
 end
 
-function ENT:Use(a, c)
+function ENT:Think()
 
-    self:SetTestInt(self:GetTestInt() + 1)
+    local playersInRadiusTable = ents.FindInSphere(self:GetPos(), self:GetCaptureRadius())
+    local playerCount = 0
 
+    for k, v in pairs(playersInRadiusTable) do
+        if(v:EntIndex() > 0 && v:EntIndex() < game.MaxPlayers()) then
+            
+            playerCount = playerCount + 1
+            print(v)
+        end
+    end
+    
+    self:SetPlayersOnPoint(playerCount)
 end
