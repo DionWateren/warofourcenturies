@@ -7,6 +7,9 @@ GM.Website = "N/A"
 function GM:Initialize()
 	
 	print("Shared Initialize")
-	--print(GM.FolderName)
+	
+end
 
+function GM:Think()
+	print("Test")
 end

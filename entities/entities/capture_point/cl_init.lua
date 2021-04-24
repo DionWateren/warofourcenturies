@@ -3,6 +3,9 @@ include("shared.lua")
 -- Draw some 3D text
 local function Draw3DCapturePoint( e, pos, scale, text, flipView )
     
+    local newCol = e:GetColor()
+    newCol.a = 200
+
 	local ang = Angle( 0, LocalPlayer():GetAngles().y - 90, 90 )
 
 	if ( flipView ) then
@@ -12,7 +15,7 @@ local function Draw3DCapturePoint( e, pos, scale, text, flipView )
 
 	cam.Start3D2D( pos, ang, scale )
 		-- Actually draw the text. Customize this to your liking.
-		draw.DrawText( text, "DermaLarge", 0, 0, Color( 0, 255, 0, 255 ), TEXT_ALIGN_CENTER )
+		draw.DrawText( text, "DermaLarge", 0, 0, newCol, TEXT_ALIGN_CENTER )
     cam.End3D2D()
 
 end
@@ -23,7 +26,7 @@ function ENT:Draw()
 	self:DrawModel()
 
 	-- The text to display
-	local text = tostring(self:GetPlayersOnPoint())
+	local text = string.Explode(".", tostring(self:GetCaptureProgress()))[1]
 
 	-- The position. We use model bounds to make the text appear just above the model. Customize this to your liking.
 	local mins, maxs = self:GetModelBounds()

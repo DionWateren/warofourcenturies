@@ -12,13 +12,15 @@ hook.Add("PostDrawTranslucentRenderables", "DrawCapturePointRadius", function()
 		
 		local pos = v:GetPos()
 
-
 		local radius = v:GetCaptureRadius()
 		local wideSteps = 10
 		local tallSteps = 10
 
+		local newCol = v:GetColor()
+		newCol.a = 50
+
 		-- Draw the sphere!
-		render.DrawSphere( pos, radius, wideSteps, tallSteps, Color( 0, 175, 175, 50 ) )
+		render.DrawSphere( pos, radius, wideSteps, tallSteps, newCol )
 
 	end
 end)

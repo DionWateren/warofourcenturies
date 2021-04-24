@@ -14,7 +14,7 @@ teams[1] = {
 }
 teams[2] = {
     name = "Potato Team",
-    color = Color( 255.0, 255.0, 0.0 ),
+    color = Color( 204, 149, 45),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"},
     p_models = { [0] = "Parrotv3" },
     spawnPoints = {}
@@ -45,7 +45,7 @@ function InitialiseTeams()
     for k, v in ipairs( teams ) do
 
         team.SetUp( k, v.name, v.color )
-
+        
         SetTeamSpawnPoints( k )
 
     end

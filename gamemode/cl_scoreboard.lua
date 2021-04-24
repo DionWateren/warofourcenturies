@@ -199,12 +199,12 @@ local PLAYER_LINE = {
         end
 
         if( self.Player:Team() == 1 ) then
-            draw.RoundedBox( 4, 0, 0, w, h, Color( 100, 100, 255, 175) )
+            draw.RoundedBox( 4, 0, 0, w, h, team.GetColor(self.Player:Team()) )
             return
         end
 
         if( self.Player:Team() == 2 ) then
-            draw.RoundedBox( 4, 0, 0, w, h, Color( 255, 255, 100, 175) )
+            draw.RoundedBox( 4, 0, 0, w, h, team.GetColor(self.Player:Team()) ) 
             return
         end
 

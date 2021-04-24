@@ -2,6 +2,7 @@ include( "shared.lua" )
 include( "cl_scoreboard.lua" )
 include( "vgui/menu_main.lua" )
 include( "cl_handle_capture_points.lua" )
+include ( "teamsetup.lua" )
 
 surface.CreateFont( "MyFont", {
 	font = "Arial",
@@ -145,7 +146,7 @@ hook.Add("HUDPaint", "HUDIdent", function()
 end)
 
 function GM:Initialize()
-
+	InitialiseTeams()
 end
 
 function GM:Think()
