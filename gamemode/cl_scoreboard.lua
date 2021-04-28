@@ -193,17 +193,17 @@ local PLAYER_LINE = {
             return
         end
         
-        if( self.Player:Team() == 0 ) then
-            draw.RoundedBox( 4, 0, 0, w, h, Color( 255, 100, 100, 175) )
-            return
-        end
-
         if( self.Player:Team() == 1 ) then
             draw.RoundedBox( 4, 0, 0, w, h, team.GetColor(self.Player:Team()) )
             return
         end
 
         if( self.Player:Team() == 2 ) then
+            draw.RoundedBox( 4, 0, 0, w, h, team.GetColor(self.Player:Team()) )
+            return
+        end
+
+        if( self.Player:Team() == 3 ) then
             draw.RoundedBox( 4, 0, 0, w, h, team.GetColor(self.Player:Team()) ) 
             return
         end
@@ -287,18 +287,18 @@ local SCORE_BOARD = {
 
         --self.TeamList={}
         self.TeamFrame0 = self.Teams:Add( SCORE_BOARD_TEAM )
-        self.TeamFrame0.Title.TeamNum = 0 
+        self.TeamFrame0.Title.TeamNum = 1 
 
         self.TeamFrame1 = self.Teams:Add( SCORE_BOARD_TEAM )
-        self.TeamFrame1.Title.TeamNum = 1 
+        self.TeamFrame1.Title.TeamNum = 2 
 
         self.TeamFrame2 = self.Teams:Add( SCORE_BOARD_TEAM )
-        self.TeamFrame2.Title.TeamNum = 2 
+        self.TeamFrame2.Title.TeamNum = 3 
 
         self.TeamFrames = {}
-        self.TeamFrames[0] = self.TeamFrame0
-        self.TeamFrames[1] = self.TeamFrame1
-        self.TeamFrames[2] = self.TeamFrame2
+        self.TeamFrames[1] = self.TeamFrame0
+        self.TeamFrames[2] = self.TeamFrame1
+        self.TeamFrames[3] = self.TeamFrame2
        
     end,
 

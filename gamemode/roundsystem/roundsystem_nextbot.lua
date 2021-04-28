@@ -36,7 +36,7 @@ hook.Add( "StartCommand", "StartCommandExample", function( ply, cmd )
 
 	-- Aim at our enemy
 	if ( ply.CustomEnemy:IsPlayer() ) then
-		cmd:SetViewAngles( ( ply.CustomEnemy:GetShootPos() - ply:GetShootPos() ):GetNormalized():Angle() )
+		cmd:SetViewAngles( ( ply.CustomEnemy:GetPos() - ply:GetShootPos() ):GetNormalized():Angle() )
 	else
 		cmd:SetViewAngles( ( ply.CustomEnemy:GetPos() - ply:GetShootPos() ):GetNormalized():Angle() )
 	end

@@ -3,9 +3,10 @@ AddCSLuaFile( "shared.lua" )
 AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "cl_scoreboard.lua" )
 AddCSLuaFile( "cl_handle_capture_points.lua" )
+AddCSLuaFile( "cl_draw_hud.lua" )
+AddCSLuaFile( "cl_font_setup.lua" )
 
 AddCSLuaFile( "teamsetup.lua" )
-AddCSLuaFile( "roundsystem.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 AddCSLuaFile( "resources.lua" )
 
@@ -13,10 +14,8 @@ include ( "resources.lua" )
 
 include ( "shared.lua" )
 include ( "teamsetup.lua" )
-include ( "roundsystem.lua" )
+include ( "roundsystem/roundsystem.lua" )
 include ( "concommands.lua" )
-
-include ( "nextbot_example.lua" )
 
 util.AddNetworkString( "f4menu" )
 util.AddNetworkString( "playdeathsound" )
@@ -44,6 +43,11 @@ hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam )
 
 	end
 
+	if (text == "!teamshuffle") then
+		
+		ply:SetupTeam( AutoBalance() )
+	end
+
 end)
 
 function GM:Initialize()
@@ -51,22 +55,13 @@ function GM:Initialize()
 	file.Write("soundscripts.txt",table.concat(sound.GetTable(),"\n"))
 
 	InitialiseTeams()
-
+	InitialiseRoundSystem()
 end
 
 function GM:Think()
-	if (false) then 
-		local nextbotTable = player.GetBots()
 
-		for k, v in pairs(nextbotTable) do
-			
-			if(!v:Alive()) then
-				
-				v:Spawn()
+	--RoundUpdate()
 
-			end
-		end
-	end
 end
 
 function GM:PlayerInitialSpawn( ply, transition )
@@ -95,13 +90,6 @@ function GM:PlayerSpawn( ply )
 
 	ply:GiveAmmo( 100, "SMG1", false )
 
-	if ( roundActive == true ) then
-		ply:KillSilent()
-		return
-	else
-		RoundStart()
-	end
-
 end
 
 
@@ -122,16 +110,11 @@ function GM:PlayerDeath( ply )
 	-- RoundEndCheck()
 end
 
-function GM:PlayerDeathThink( ply )
+-- function GM:PlayerDeathThink( ply )
 	
-	if ( roundActive == false ) then
-		ply:Spawn()
-		return true
-	else
-		return false
-	end
+-- 	return true
 
-end
+-- end
 
 function GM:PlayerSelectSpawn( ply, transition )
 	print('player is selecting spawn')
@@ -192,19 +175,9 @@ function GM:ShowSpare1( ply )
 
 	player.CreateNextBot( table.Random(botNameTable) )
 
-	-- local botamount = 2
-	-- PrintMessage( HUD_PRINTTALK, "Spawning " .. botamount .. " bots" )
-	-- for i=0, botamount do
-	-- 	RunConsoleCommand( "bot", "" )
-	-- end
 end
 
 function GM:ShowSpare2( ply )
 	net.Start( "f4menu" )
 	net.Send( ply )
-end
-
-function GM:PlayerDisconnected( ply )
-
-
 end

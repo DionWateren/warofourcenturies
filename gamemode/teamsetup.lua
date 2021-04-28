@@ -2,7 +2,6 @@ local ply = FindMetaTable( "Player" )
 
 --include ("player_class/player_default.lua")
 --include ("player_class/player_custom.lua")
-
 local teams = {}
 
 teams[1] = {
@@ -10,38 +9,72 @@ teams[1] = {
     color = Color( 255.0, 0.0, 0.0 ),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
     p_models = { [0] = "BFOL_Penguin_0" },
-    spawnPoints = {}
+    spawnPoints = {},
+    logoMat = Material( "hud/1_penguin_logo.png", 	"noclamp" ),
+    curTickets = 0.0
 }
 teams[2] = {
     name = "Potato Team",
     color = Color( 204, 149, 45),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"},
     p_models = { [0] = "Parrotv3" },
-    spawnPoints = {}
+    spawnPoints = {},
+    logoMat = Material( "hud/0_potato_logo.png",	"noclamp" ),
+    curTickets = 0.0
 }
--- teams[3] = {
---     name = "Banana Team",
---     color = Color( 238, 255, 0),
---     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
---     p_models = { [0] = "BFOL_Banana-Man_0" }
--- }
+teams[3] = {
+    name = "Banana Team",
+    color = Color( 238, 255, 0),
+    weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
+    p_models = { [0] = "BFOL_Banana-Man_0" },
+    spawnPoints = {},
+    logoMat = Material( "hud/2_banana_logo.png",	"noclamp" ),
+    curTickets = 0.0
+}
+
+function GetTeamCurrentTickets( teamId )
+    if (teamId == nil) then return nil end
+    return teams[teamId].curTickets
+end
+function SetTeamCurrentTickets( teamId, newTickets )
+    if (teamId == nil) then return nil end
+    teams[teamId].curTickets = newTickets
+end
+function AddTeamCurrentTickets( teamId, ticketsToAdd )
+    if (teamId == nil) then return nil end
+    teams[teamId].curTickets = teams[teamId].curTickets + ticketsToAdd
+end
+
+function GetTeamLogoMaterial( teamId )
+    if (teamId == nil || teams[teamId] == nil) then return nil end
+    return teams[teamId].logoMat
+end
+
+function GetTeamCount()
+    return #teams
+end
 
 function SetTeamSpawnPoints( teamId )
-    for k, v in pairs( ents.FindByClass("info_player_start") ) do
-
+    local playerStartEntTable = ents.FindByClass("info_player_start")
+    for k, v in pairs( playerStartEntTable ) do
         entKeyValueTable = v:GetKeyValues()
 
         if (entKeyValueTable.TeamNum == teamId) then
 
             teams[teamId].spawnPoints[k] = v:EntIndex()
-            
+        
+        end
+    end
+
+    -- if all fails add fall back spawn points
+    if(table.IsEmpty(teams[teamId].spawnPoints)) then
+        for k, v in pairs( playerStartEntTable ) do
+            teams[teamId].spawnPoints[k] = v:EntIndex()
         end
     end
 end
 
 function InitialiseTeams()
-    print("Initialising teams")
-
     for k, v in ipairs( teams ) do
 
         team.SetUp( k, v.name, v.color )
@@ -89,7 +122,6 @@ function ply:GetTeamSpawnPointEnt(  )
         PrintTable(teamTable)
         return 0 
     end
-
     // if not spawn data is set, recreate it
     if (table.IsEmpty(teamTable.spawnPoints)) then
         SetTeamSpawnPoints(self:Team())

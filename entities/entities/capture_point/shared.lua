@@ -1,5 +1,5 @@
 ENT.Type = "anim"
-ENT.Base = "base_gmodentity"
+ENT.Base = "base_anim"
 ENT.ClassName = "capture_point"
 
 ENT.PrintName = "Capture Point"
@@ -19,6 +19,7 @@ function ENT:SetupDataTables()
     self:NetworkVar("Float",    12, "CaptureSpeed")
     self:NetworkVar("Float",    13, "CaptureMax")
     self:NetworkVar("Float",    14, "CaptureDecay")
+    self:NetworkVar("Float",    14, "CaptureWorth")
 
     if (SERVER) then
         
@@ -34,6 +35,7 @@ function ENT:SetupDataTables()
         self:SetCaptureSpeed    (5.0)
         self:SetCaptureMax      (100.0)
         self:SetCaptureDecay    (2.5)
+        self:SetCaptureWorth    (1.0) -- scalar
 
     end
 end
