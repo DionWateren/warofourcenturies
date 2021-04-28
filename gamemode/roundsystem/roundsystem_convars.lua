@@ -2,7 +2,7 @@ local preTag = "wooc_"
 
 -- bot related
 CreateConVar(preTag .. "bot_quota"
-    , 12
+    , 6
     , FCVAR_NONE
     , "Amount of bots joining the server")
 

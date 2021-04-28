@@ -60,7 +60,7 @@ end
 
 function GM:Think()
 
-	--RoundUpdate()
+	RoundUpdate()
 
 end
 
@@ -72,8 +72,6 @@ function GM:PlayerInitialSpawn( ply, transition )
 end
 
 function GM:PlayerSpawn( ply )
-	print("Player Spawn")
-
 	ply:SetupHands()
 	ply:GiveWeapons()
 
@@ -89,7 +87,6 @@ function GM:PlayerSpawn( ply )
 	test_trail = util.SpriteTrail( ply, 0, Color(math.Rand(0, 255), math.Rand(0, 255), math.Rand(0, 255)), false, 100, 0, 3, 1/(100) * 0.5, "trails/plasma.vmt")
 
 	ply:GiveAmmo( 100, "SMG1", false )
-
 end
 
 
@@ -117,14 +114,11 @@ end
 -- end
 
 function GM:PlayerSelectSpawn( ply, transition )
-	print('player is selecting spawn')
-	
+
 	local spawnPointEnt = ply:GetTeamSpawnPointEnt()
 	if (spawnPointEnt != nill) then
 		return spawnPointEnt
 	end
-
-	print("Spawning player on default spawn!")
 
 	return ents.FindByClass("info_player_start")[0]
 end

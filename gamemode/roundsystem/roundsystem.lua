@@ -57,10 +57,6 @@ function RoundUpdate()
                 end
             end
 
-            if( time <= 0 ) then
-                RoundEndCheck()
-            end
-
         end
     end
 
@@ -137,6 +133,10 @@ function RoundInProgress()
     if (curTicketCheckTime > ticketCheckMaxTime) then
         curTicketCheckTime = 0.0
 
+        if (table.IsEmpty(cpEntTable)) then
+            cpEntTable = ents.FindByClass("capture_point")
+        end
+
         for k, v in pairs(cpEntTable) do
             if(v:GetIsCaptured()) then
                 AddTeamCurrentTickets(
@@ -144,8 +144,15 @@ function RoundInProgress()
                     , v:GetCaptureWorth() * 1.0)
             end
         end
-    
+
+        local resultText = "Round Results: "
+        for i=1, GetTeamCount() do
+            resultText = resultText .. team.GetName(i) .. " " .. GetTeamCurrentTickets(i) .. " | "
+        end
+        print(resultText)
+
         RoundEndCheck()
+
     end
 
     curTicketCheckTime = curTicketCheckTime + FrameTime()
@@ -172,7 +179,7 @@ function EndRound( winnerTeam )
     conVarRoundOver:SetBool(true)
 
     -- reward the players
-    for k, v in pairs( players.GetAll() ) do
+    for k, v in pairs( player.GetAll() ) do
         if( team.GetName( v:Team() ) == winnerTeam.Name ) then
             --v:StadsAddXp( 100 )
             PrintMessage(HUD_PRINTCENTER, "You have won!")
@@ -197,7 +204,7 @@ function EndRound( winnerTeam )
 end
 
 function AutoBalance()
-    
+
     for x=1, GetTeamCount() do
         for y=1, GetTeamCount() do
             if(x==y) then
