@@ -1,5 +1,6 @@
 include("roundsystem_convars.lua")
 include("roundsystem_nextbot.lua")
+include("roundsystem_simple_pathfinding.lua")
 
 local conVarWarmupTime      = GetConVar("wooc_round_warmup_time")
 local conVarInProgressTime  = GetConVar("wooc_round_in_progress_time")
@@ -21,8 +22,12 @@ local ticketCheckMaxTime = 1.0
 local cpEntTable = {}
 local botEntTable = {}
 
-function UpdateTimer()
-    curRoundTime = curRoundTime - FrameTime()
+function UpdateTimer(countUp)
+    if(countUp) then
+        curRoundTime = curRoundTime + FrameTime()
+    else
+        curRoundTime = curRoundTime - FrameTime()
+    end
 
     net.Start( "round_timer" )
         net.WriteInt(math.floor(curRoundTime), 10)
@@ -44,12 +49,13 @@ function InitialiseRoundSystem()
 
 end
 
-hook.Add("PlayerInitialSpawn", "SendTargetTickets", function()
+hook.Add("PlayerSpawn", "SendTargetTickets", function()
 
     SendTargetTickets()
 
 end)
 
+local initialWarmupOver = false
 function RoundUpdate()
     if(conVarInProgress:GetBool()) then
 
@@ -61,12 +67,12 @@ function RoundUpdate()
         if (CanStartRound()) then
 
             -- check & set warmup
-            if (!conVarWarmup:GetBool() && !conVarInProgress:GetBool()) then
+            if (!conVarWarmup:GetBool() && !conVarInProgress:GetBool() && !initialWarmupOver) then
                 conVarWarmup:SetBool(true)
                 curRoundTime = conVarWarmupTime:GetFloat()
-            
-            elseif (curRoundTime <= 0.0) then
-                if(conVarWarmup:GetBool()) then
+                initialWarmupOver = true
+            elseif (curRoundTime <= 0.0 || initialWarmupOver) then
+                if(conVarWarmup:GetBool() || initialWarmupOver) then
                     RoundStart()
                 end
             end
@@ -74,8 +80,10 @@ function RoundUpdate()
         end
     end
 
-    if(conVarWarmup:GetBool() || conVarInProgress:GetBool()) then
-        UpdateTimer()
+    if(conVarWarmup:GetBool()) then
+        UpdateTimer(false)
+    elseif(conVarInProgress:GetBool()) then
+        UpdateTimer(true)
     end
 end
 
@@ -152,20 +160,28 @@ function RoundInProgress()
         end
 
         for k, v in pairs(cpEntTable) do
-
+            
             if(v:GetIsCaptured()) then
                 AddTeamCurrentTickets(
                     v:GetTeamOwnership()
                     , v:GetCaptureWorth() * 1.0)
+
+                if (GetTeamCurrentTickets(v:GetTeamOwnership()) > conVarTargetTickets:GetInt()) then
+                    SetTeamCurrentTickets(v:GetTeamOwnership(), conVarTargetTickets:GetInt())
+                end
+                
+                
             end
         end
 
-        -- local resultText = "Round Results: "
-        -- for i=1, GetTeamCount() do
-        --     resultText = resultText .. team.GetName(i) .. " " .. GetTeamCurrentTickets(i) .. " | "
-        -- end
-        --print(resultText)
-        --PrintMessage(HUD_PRINTCENTER, resultText)
+        local tableToSend = {}
+        for i=1, GetTeamCount() do
+            tableToSend[i] = GetTeamCurrentTickets(i)
+        end
+
+        net.Start("team_ticket_scores")
+            net.WriteTable(tableToSend)
+        net.Broadcast()
 
         RoundEndCheck()
 
@@ -204,6 +220,16 @@ function EndRound( winnerTeam )
 
     timer.Create( "cleanup", 3, 1, function()
         game.CleanUpMap( false, {} )
+
+        local tableToSend = {}
+        for i=1, GetTeamCount() do
+            tableToSend[i] = GetTeamCurrentTickets(i)
+        end
+
+        net.Start("team_ticket_scores")
+            net.WriteTable(tableToSend)
+        net.Broadcast()
+
         table.Empty(cpEntTable)
         
         for k, v in pairs( player.GetAll() ) do

@@ -6,14 +6,14 @@ AddCSLuaFile( "cl_handle_capture_points.lua" )
 AddCSLuaFile( "cl_draw_hud.lua" )
 AddCSLuaFile( "cl_font_setup.lua" )
 
-AddCSLuaFile( "teamsetup.lua" )
+AddCSLuaFile( "teamsetup/teamsetup.lua" )
 AddCSLuaFile( "vgui/menu_main.lua" )
 AddCSLuaFile( "resources.lua" )
 
 include ( "resources.lua" )
 
 include ( "shared.lua" )
-include ( "teamsetup.lua" )
+include ( "teamsetup/teamsetup.lua" )
 include ( "roundsystem/roundsystem.lua" )
 include ( "concommands.lua" )
 
@@ -23,6 +23,7 @@ util.AddNetworkString( "playdeathsound" )
 util.AddNetworkString( "round_timer" )
 util.AddNetworkString( "round_active" )
 util.AddNetworkString( "target_tickets" )
+util.AddNetworkString( "team_ticket_scores" )
 
 hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam ) 
 

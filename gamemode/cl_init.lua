@@ -4,39 +4,13 @@ include( "vgui/menu_main.lua" )
 include( "cl_handle_capture_points.lua" )
 include( "cl_draw_hud.lua" )
 include( "cl_font_setup.lua" )
-include( "teamsetup.lua" )
+include( "teamsetup/teamsetup.lua" )
 
-local alpha = 0
 targetTickets = -1
 
-hook.Add("PostDrawTranslucentRenderables", "DebugDrawLines", function()
-    alpha = 128 + math.sin(CurTime()) * 127;
-
-	render.SetColorMaterial()
-
-	-- The position to render the sphere at, in this case, the looking position of the local player
-	local pos = LocalPlayer():GetEyeTrace().HitPos
-
-	local trace = LocalPlayer():GetEyeTrace()
-	local angle = trace.HitNormal:Angle()
-		
-	render.DrawLine( trace.HitPos, trace.HitPos + 8 * angle:Forward(), Color( 255, 0, 0 ), true )
-	render.DrawLine( trace.HitPos, trace.HitPos + 8 * -angle:Right(), Color( 0, 255, 0 ), true )
-	render.DrawLine( trace.HitPos, trace.HitPos + 8 * angle:Up(), Color( 0, 0, 255 ), true )
-		
-	cam.Start3D2D( trace.HitPos, angle, 1 )
-		surface.SetDrawColor( 255, 165, 0, 255 )
-		surface.DrawRect( 0, 0, 8, 8 )
-		render.DrawLine( Vector( 0, 0, 0 ), Vector( 8, 8, 8 ), Color( 100, 149, 237, 255 ), true )
-	cam.End3D2D()
-end)
-
 function GM:Initialize()
+
 	InitialiseTeams()
-end
-
-function GM:Think()
-
 
 end
 
@@ -69,7 +43,6 @@ end)
 
 net.Receive( "target_tickets", function()
 
-	print("Test")
 	targetTickets = net.ReadUInt( 10 )
 
 end)

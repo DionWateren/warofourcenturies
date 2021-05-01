@@ -1,3 +1,9 @@
+if(SERVER) then
+    AddCSLuaFile( "teamsetup_draw_showteam.lua" )
+end
+
+include("teamsetup_draw_showteam.lua")
+
 local ply = FindMetaTable( "Player" )
 
 --include ("player_class/player_default.lua")
@@ -128,6 +134,16 @@ function ply:GetTeamSpawnPointEnt(  )
 
     local pointIndex = table.Random( teamTable.spawnPoints )
     return ents.GetByIndex(pointIndex)
+end
+
+if(CLIENT) then
+    net.Receive("team_ticket_scores", function()
+        local receivedTable = net.ReadTable()
+        
+        for k, v in pairs(receivedTable) do
+            SetTeamCurrentTickets(k, v)
+        end
+    end)
 end
 
 player_manager.AddValidModel( "BFOL_Banana-Man_0", "models/player/rebs/BFOL_Banana-Man_0/BFOL_Banana-Man.mdl" );
