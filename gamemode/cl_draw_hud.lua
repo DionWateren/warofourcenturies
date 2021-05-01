@@ -1,26 +1,40 @@
-local TIMER_PANEL = {
-	Init = function( self )
+function draw.Circle( x, y, radius, seg )
+	local cir = {}
 
-		self.Body = self:Add( "Panel" )
-		self.Body:Dock( TOP )
-		self.Body:SetHeight( 40 )
+	table.insert( cir, { x = x, y = y, u = 0.5, v = 0.5 } )
+	for i = 0, seg do
+		local a = math.rad( ( i / seg ) * -360 )
+		table.insert( cir, { x = x + math.sin( a ) * radius, y = y + math.cos( a ) * radius, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
+	end
+
+	local a = math.rad( 0 ) -- This is needed for non absolute segment counts
+	table.insert( cir, { x = x + math.sin( a ) * radius, y = y + math.cos( a ) * radius, u = math.sin( a ) / 2 + 0.5, v = math.cos( a ) / 2 + 0.5 } )
+
+	surface.DrawPoly( cir )
+end
+
+local HEADER_PANEL = {
+	Init = function( self )
+		
+		self.Body = self:Add( "DPanel" )
+		self.Body:SetSize(400, 400)
+		self.Body:Dock(FILL)
+		--self.Body:Center()
 		function self.Body:Paint( w, h )
-			surface.SetDrawColor( 150, 255, 150 )
-			draw.RoundedBox( 16, -20, 0, w/2, h, Color( 75, 75, 75, 150 ) ) 
+			draw.RoundedBox( 6, 0, 0, w, h, Color( 75, 75, 75, 150 ) ) 
 		end
 
 		self.Timer = self.Body:Add( "DLabel" )
 		self.Timer:SetFont( "MyFont" )
 		self.Timer:SetTextColor( Color( 255, 255, 255, 255 ) )
-		self.Timer:Dock( LEFT )
-		self.Timer:SetContentAlignment( 5 )
+		self.Timer:Dock( TOP )
+		self.Timer:Center()
 
 	end,
 
 	PerformLayout = function( self )
-
-		self:SetSize( 200, 100 )
-		self:SetPos( 0, 0 )
+		self:SetSize( ScrW(), 200 )
+		-- self:SetPos( ScrW() * 0.5, 0 )
 
 	end,
 
@@ -31,15 +45,77 @@ local TIMER_PANEL = {
 		end)
 
 		if ( time == nil ) then
-			self.Timer:SetText( 5 )
+			self.Timer:SetText( "--" )
 		else
 			self.Timer:SetText( time ) 
 		end
+	end
+}
+
+local RIGHT_PANEL = {
+	Init = function( self )
+		
+		self.Body = self:Add( "DPanel" )
+		self.Body:Dock(FILL)
+		function self.Body:Paint( w, h )
+			--draw.RoundedBox( 6, 0, 0, w, h, Color( 243, 64, 64, 150) ) 
+		end
+
+		self.TicketPanel = self.Body:Add("DPanel")
+		self.TicketPanel:SetSize(200, 0)
+		self.TicketPanel:Dock(RIGHT)
+		function self.TicketPanel:Paint( w, h )
+			-- draw.RoundedBox( 6, 0, 0, w, h, Color( 115, 238, 146, 100) ) 
+
+			local textHorOffset = 50
+			local circleRadius = 40
+
+			surface.SetFont( "MyFont" )
+			surface.SetTextColor( 79, 205, 255)
+			surface.SetTextPos( w*0.5-textHorOffset, h*0.5- 210 ) 
+			surface.DrawText( targetTickets )
+
+			surface.SetFont( "MyFont" )
+			surface.SetTextColor( 53, 53, 53)
+			surface.SetTextPos( w*0.5-textHorOffset, h*0.5- 205 ) 
+			surface.DrawText( "____" )
+
+			for i=1, GetTeamCount() do
+
+				local logoMat = GetTeamLogoMaterial(i)
+				if(logoMat != nil) then
+					surface.SetMaterial( GetTeamLogoMaterial(i) )
+				end
+
+				local heightOffset = 100 
+				local newHeight = (h * 0.5 + ((i-1) * heightOffset)) - (heightOffset * GetTeamCount() * 0.5)
+				
+				surface.SetDrawColor( 255, 255, 255)
+				draw.Circle(w*0.75, newHeight, circleRadius, 40)
+
+				surface.SetFont( "MyFont" )
+				surface.SetTextColor( 255, 255, 255 )
+				surface.SetTextPos( w*0.5-textHorOffset, newHeight - (circleRadius * 0.4)) 
+				surface.DrawText( GetTeamCurrentTickets(i) )
+				
+			end
+		end
+
+	end,
+
+	PerformLayout = function( self )
+		self:SetSize( ScrW(), ScrH() )
+		-- self:SetPos( ScrW() * 0.5, 0 )
+
+	end,
+
+	Think = function( self, w, h )
 
 	end
 }
 
-TIMER_PANEL = vgui.RegisterTable( TIMER_PANEL, "EditablePanel" )
+HEADER_PANEL 			= vgui.RegisterTable( HEADER_PANEL, "EditablePanel" )
+RIGHT_PANEL 			= vgui.RegisterTable( RIGHT_PANEL, "EditablePanel" )
 
 function DrawCapturePoints()
 
@@ -47,25 +123,28 @@ function DrawCapturePoints()
 
 	for k, v in pairs(cpEntsTable) do
 		
-		--surface.SetDrawColor( v:GetColor():Unpack() )
 		local newCol = v:GetColor()
-		surface.DrawCircle( (ScrW() * 0.5) + (40 * k) - (40 * #cpEntsTable), 50, 10, newCol.r, newCol.g, newCol.b )
-
+		surface.DrawCircle( (ScrW() * 0.5) + (40 * (k - (#cpEntsTable * 0.5))) - (40 * #cpEntsTable), 50, 10, newCol.r, newCol.g, newCol.b )
+		
+		-- if (v:GetTeamOwnership() > 0) then
+		-- 	surface.SetMaterial( GetTeamLogoMaterial(v:GetTeamOwnership()))
+		-- 	surface.DrawCircle( 500, 500, 100 + math.sin( CurTime() ) * 50, Color( 255, 255, 255, newCol.r ) )
+		-- end
+		
 	end
-
-	surface.SetDrawColor( 255, 255, 255, 128 )
-	surface.DrawOutlinedRect( 25, 25, 100, 100, math.floor( math.sin( CurTime() * 5 ) * 5 ) + 10 )
 	
 end
 
 hook.Add("HUDPaint", "HUDIdent", function()
 
-	if( !IsValid( TimerPanel ) ) then
-		TimerPanel = vgui.CreateFromTable( TIMER_PANEL )
+	if( !IsValid( HeaderPanel ) ) then
+		HeaderPanel = vgui.CreateFromTable( HEADER_PANEL )
+		HeaderPanel:Show()
 	end
 
-	if( !IsValid( TimerPanel ) ) then
-		TimerPanel:Show()
+	if( !IsValid( RightPanel ) ) then
+		RightPanel = vgui.CreateFromTable( RIGHT_PANEL )
+		RightPanel:Show()
 	end
 
 	local ply = LocalPlayer()

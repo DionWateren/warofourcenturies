@@ -5,7 +5,7 @@ local ply = FindMetaTable( "Player" )
 local teams = {}
 
 teams[1] = {
-    name = "Penguin Team",
+    name = "Penguin",
     color = Color( 255.0, 0.0, 0.0 ),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
     p_models = { [0] = "BFOL_Penguin_0" },
@@ -14,7 +14,7 @@ teams[1] = {
     curTickets = 0.0
 }
 teams[2] = {
-    name = "Potato Team",
+    name = "Potato",
     color = Color( 204, 149, 45),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"},
     p_models = { [0] = "Parrotv3" },
@@ -23,7 +23,7 @@ teams[2] = {
     curTickets = 0.0
 }
 teams[3] = {
-    name = "Banana Team",
+    name = "Banana",
     color = Color( 238, 255, 0),
     weapons = { "weapon_vampcrowbar", "weapon_revolver", "weapon_bigrevolver", "weapon_chairgun", "weapon_weirdsmg_0"  },
     p_models = { [0] = "BFOL_Banana-Man_0" },
@@ -91,9 +91,8 @@ function ply:SetupTeam( n )
     self:SetPlayerColor( team.GetColor( n ):ToVector() )
     self:SetHealth( 150 )
     self:SetMaxHealth( 200 )
-    self:SetWalkSpeed( 100 )
-    self:SetRunSpeed( 1000 )
-
+    self:SetWalkSpeed( 200 )
+    self:SetRunSpeed( 800 )
     --print( type( teams[n].p_models[0] ) )
     --print( teams[n].p_models[0] )
 

@@ -22,6 +22,7 @@ util.AddNetworkString( "playdeathsound" )
 
 util.AddNetworkString( "round_timer" )
 util.AddNetworkString( "round_active" )
+util.AddNetworkString( "target_tickets" )
 
 hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam ) 
 
@@ -43,6 +44,12 @@ hook.Add( "PlayerSay", "CommandIdent", function( ply, text, bteam )
 
 	end
 
+	if( text == "!kill" ) then
+
+		ply:Kill()
+
+	end
+
 	if (text == "!teamshuffle") then
 		
 		ply:SetupTeam( AutoBalance() )
@@ -56,6 +63,7 @@ function GM:Initialize()
 
 	InitialiseTeams()
 	InitialiseRoundSystem()
+	
 end
 
 function GM:Think()
@@ -65,13 +73,14 @@ function GM:Think()
 end
 
 function GM:PlayerInitialSpawn( ply, transition )
-	print("Player Initial Spawn")
 
 	ply:SetupTeam( AutoBalance() )
 
 end
 
 function GM:PlayerSpawn( ply )
+    ply:SetJumpPower( 2000 )
+
 	ply:SetupHands()
 	ply:GiveWeapons()
 

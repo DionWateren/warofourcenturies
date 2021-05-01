@@ -29,12 +29,26 @@ function UpdateTimer()
     net.Broadcast()
 end
 
+function SendTargetTickets()
+    curRoundTime = curRoundTime - FrameTime()
+
+    net.Start( "target_tickets" )
+        net.WriteUInt(conVarTargetTickets:GetInt(), 10)
+    net.Broadcast()
+end
+
 function InitialiseRoundSystem()
 
     cpEntTable = ents.FindByClass("capture_point")
     botEntTable = player.GetBots()
 
 end
+
+hook.Add("PlayerInitialSpawn", "SendTargetTickets", function()
+
+    SendTargetTickets()
+
+end)
 
 function RoundUpdate()
     if(conVarInProgress:GetBool()) then
@@ -138,6 +152,7 @@ function RoundInProgress()
         end
 
         for k, v in pairs(cpEntTable) do
+
             if(v:GetIsCaptured()) then
                 AddTeamCurrentTickets(
                     v:GetTeamOwnership()
@@ -145,11 +160,12 @@ function RoundInProgress()
             end
         end
 
-        local resultText = "Round Results: "
-        for i=1, GetTeamCount() do
-            resultText = resultText .. team.GetName(i) .. " " .. GetTeamCurrentTickets(i) .. " | "
-        end
-        print(resultText)
+        -- local resultText = "Round Results: "
+        -- for i=1, GetTeamCount() do
+        --     resultText = resultText .. team.GetName(i) .. " " .. GetTeamCurrentTickets(i) .. " | "
+        -- end
+        --print(resultText)
+        --PrintMessage(HUD_PRINTCENTER, resultText)
 
         RoundEndCheck()
 
@@ -180,15 +196,16 @@ function EndRound( winnerTeam )
 
     -- reward the players
     for k, v in pairs( player.GetAll() ) do
-        if( team.GetName( v:Team() ) == winnerTeam.Name ) then
+        --if( team.GetName( v:Team() ) == winnerTeam.Name ) then
             --v:StadsAddXp( 100 )
-            PrintMessage(HUD_PRINTCENTER, "You have won!")
-        end
+            PrintMessage(HUD_PRINTCENTER, winnerTeam.Name .. " has won the round!")
+        --end
     end
 
     timer.Create( "cleanup", 3, 1, function()
         game.CleanUpMap( false, {} )
-
+        table.Empty(cpEntTable)
+        
         for k, v in pairs( player.GetAll() ) do
 
             if( v:Alive() ) then

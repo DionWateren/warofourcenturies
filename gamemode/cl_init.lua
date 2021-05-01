@@ -7,6 +7,7 @@ include( "cl_font_setup.lua" )
 include( "teamsetup.lua" )
 
 local alpha = 0
+targetTickets = -1
 
 hook.Add("PostDrawTranslucentRenderables", "DebugDrawLines", function()
     alpha = 128 + math.sin(CurTime()) * 127;
@@ -63,6 +64,13 @@ net.Receive( "playdeathsound", function()
 	--surface.PlaySound( temp_death_sound )
 
 	--end
+
+end)
+
+net.Receive( "target_tickets", function()
+
+	print("Test")
+	targetTickets = net.ReadUInt( 10 )
 
 end)
 

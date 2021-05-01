@@ -8,6 +8,8 @@ ENT.Spawnable = true
 
 function ENT:SetupDataTables()
     
+    print("CAPTURE POINT DATA TABLE")
+
     self:NetworkVar("String",   0, "CaptureName")
     self:NetworkVar("Int",      1, "PlayersOnPoint")
     self:NetworkVar("Int",      2, "TeamCapturing")
