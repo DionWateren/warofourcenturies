@@ -226,9 +226,9 @@ local SCORE_BOARD_TEAM = {
         self.Title = self:Add( PLAYER_LINE_TITLE )
 
         local TeamsWidth = 1200 / 3
-        self:Dock( TOP )
-        self:DockMargin( TeamsWidth/2, 0, TeamsWidth/2, 0 )
+        self:Dock( LEFT )
         self:SetPaintBackground( true )
+        
 
     end,
 
@@ -357,6 +357,7 @@ function GM:ScoreboardHide()
 
     if ( IsValid( Scoreboard ) ) then
         Scoreboard:Hide()
+        Scoreboard = {}
     end
 
 end

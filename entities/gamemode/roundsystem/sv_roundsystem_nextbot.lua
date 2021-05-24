@@ -65,7 +65,7 @@ hook.Add( "StartCommand", "astar_example", function( ply, cmd )
 	-- Select the crowbar
 	cmd:SelectWeapon( ply:GetWeapon( "weapon_pistol" ) )
 	-- Hold Mouse 1 to cause the bot to attack
-	cmd:SetButtons( IN_ATTACK )
+	--cmd:SetButtons( IN_ATTACK )
 	-- Enemy is dead, clear our enemy so that we may acquire a new one
 	if ( !ply.CustomEnemy:Alive() ) then
 		ply.CustomEnemy = nil

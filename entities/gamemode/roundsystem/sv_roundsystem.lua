@@ -1,20 +1,3 @@
-include("roundsystem_convars.lua")
-include("roundsystem_nextbot.lua")
-include("roundsystem_simple_pathfinding.lua")
-
-local conVarWarmupTime      = GetConVar("wooc_round_warmup_time")
-local conVarInProgressTime  = GetConVar("wooc_round_in_progress_time")
-
-local conVarWarmup          = GetConVar("wooc_round_warmup")
-local conVarInProgress      = GetConVar("wooc_round_in_progress")
-
-local conVarStartQuota      = GetConVar("wooc_round_start_team_quota")
-local conVarTargetTickets   = GetConVar("wooc_round_target_tickets")
-
-local conVarRoundOver       = GetConVar("wooc_round_over")
-
-local conVarBotQuota       = GetConVar("wooc_bot_quota")
-
 local curRoundTime = 0.0
 local curTicketCheckTime = 0.0
 local ticketCheckMaxTime = 1.0
@@ -65,7 +48,6 @@ function RoundUpdate()
 
     else
         if (CanStartRound()) then
-
             -- check & set warmup
             if (!conVarWarmup:GetBool() && !conVarInProgress:GetBool() && !initialWarmupOver) then
                 conVarWarmup:SetBool(true)
@@ -147,6 +129,9 @@ function RoundStart()
 
     conVarRoundOver:SetBool(false)
 
+    net.Start("round_start")
+    net.Broadcast()
+
     curRoundTime = conVarInProgressTime:GetFloat()
 end
 
@@ -223,6 +208,7 @@ function EndRound( winnerTeam )
 
         local tableToSend = {}
         for i=1, GetTeamCount() do
+            SetTeamCurrentTickets(i, 0)
             tableToSend[i] = GetTeamCurrentTickets(i)
         end
 
@@ -247,9 +233,9 @@ function EndRound( winnerTeam )
 end
 
 function AutoBalance()
-
-    for x=1, GetTeamCount() do
-        for y=1, GetTeamCount() do
+    local teamCount = GetTeamCount()
+    for x=1, teamCount do
+        for y=1, teamCount do
             if(x==y) then
                 continue 
             end

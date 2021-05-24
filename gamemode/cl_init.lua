@@ -1,16 +1,8 @@
 include( "shared.lua" )
-include( "cl_scoreboard.lua" )
-include( "vgui/menu_main.lua" )
-include( "cl_handle_capture_points.lua" )
-include( "cl_draw_hud.lua" )
-include( "cl_font_setup.lua" )
-include( "teamsetup/teamsetup.lua" )
 
 targetTickets = -1
 
 function GM:Initialize()
-
-	InitialiseTeams()
 
 end
 
@@ -47,6 +39,21 @@ net.Receive( "target_tickets", function()
 
 end)
 
+local roundWinAudio = Sound( "effects/round_start_01.wav" )
+net.Receive( "round_start", function()
+
+	-- play audio
+    surface.PlaySound(roundWinAudio)
+
+end)
+local tempSound = Sound("voicelines/thesilverwolf/banana_provoking01.wav")
+hook.Add( "KeyPress", "keypress_use_hi", function( ply, key )
+	if ( key == IN_USE ) then
+		print( "hi" )
+		sound.Play(tempSound, Vector(0, 0, 0))
+	end
+end )
+    
 local hideHud = {
 	["CHudHealth"] 	= true,
 	["CHudBattery"] = true,

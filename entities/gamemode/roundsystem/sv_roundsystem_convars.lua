@@ -46,3 +46,12 @@ CreateConVar(preTag .. "round_over"
     , 0
     , FCVAR_NONE
     , "Is the round over?")
+
+conVarWarmupTime      = GetConVar("wooc_round_warmup_time")
+conVarInProgressTime  = GetConVar("wooc_round_in_progress_time")
+conVarWarmup          = GetConVar("wooc_round_warmup")
+conVarInProgress      = GetConVar("wooc_round_in_progress")
+conVarStartQuota      = GetConVar("wooc_round_start_team_quota")
+conVarTargetTickets   = GetConVar("wooc_round_target_tickets")
+conVarRoundOver       = GetConVar("wooc_round_over")
+conVarBotQuota       = GetConVar("wooc_bot_quota")
